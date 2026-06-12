@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>QuackUp</title>
-    <!-- Ligação para o ficheiro Manifest -->
+    
+    <!-- Link para o Manifesto PWA (Instalação no Telemóvel) -->
     <link rel="manifest" href="manifest.json">
-    <!-- Tailwind CSS para Estilização -->
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        /* Animações simples para imitar o React */
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         .slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        /* Esconder scrollbar mas permitir rolagem */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -26,7 +28,7 @@
     <!-- Container imitando ecrã de telemóvel -->
     <div class="w-full max-w-md bg-gray-50 h-screen flex flex-col relative shadow-2xl overflow-hidden sm:rounded-3xl sm:h-[95vh] sm:my-auto sm:border-[8px] sm:border-gray-900">
         
-        <!-- Top Header / App Bar -->
+        <!-- Header -->
         <header class="bg-white pt-6 pb-4 px-4 shadow-sm flex items-center justify-center gap-3 z-20 shrink-0">
             <div class="w-12 h-12 flex items-center justify-center relative">
                 <img id="logo-img" src="img/QuackUp.png" alt="QuackUp Logo" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
@@ -35,15 +37,15 @@
             <h1 class="text-2xl font-black text-gray-800 tracking-tight">Quack<span class="text-green-500">Up</span></h1>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <main class="flex-1 overflow-x-hidden relative bg-gray-50">
             
-            <!-- ABA 1: HOME (HOJE) -->
+            <!-- ABA 1: HOME -->
             <div id="tab-home" class="flex flex-col h-full px-4 py-6 overflow-y-auto no-scrollbar pb-28 fade-in">
                 <div class="text-center mb-8">
                     <h2 class="text-gray-500 text-sm uppercase tracking-wider font-semibold">Hoje</h2>
                     <p id="today-date-display" class="text-2xl font-bold text-gray-800"></p>
-                    <p class="text-gray-500 mt-2 text-sm">O que você treinou hoje?</p>
+                    <p class="text-gray-500 mt-2 text-sm">O que treinou hoje?</p>
                 </div>
                 <div id="home-buttons" class="grid grid-cols-1 gap-4 w-full max-w-sm mx-auto">
                     <!-- Botões gerados via JS -->
@@ -52,7 +54,6 @@
 
             <!-- ABA 2: CALENDÁRIO & ESTATÍSTICAS -->
             <div id="tab-calendar" class="hidden flex-col h-full fade-in">
-                <!-- Cabeçalho do Calendário -->
                 <div class="bg-white px-4 py-4 border-b border-gray-100 flex items-center justify-between shadow-sm rounded-b-xl z-10 shrink-0">
                     <button id="btn-prev-month" class="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors active:scale-95">
                         <i data-lucide="chevron-left"></i>
@@ -69,7 +70,6 @@
                 </div>
 
                 <div class="flex-1 overflow-y-auto no-scrollbar pb-28">
-                    <!-- Grid do Calendário -->
                     <div class="p-4">
                         <div class="grid grid-cols-7 mb-2 text-center text-xs font-bold text-gray-400 uppercase">
                             <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
@@ -79,12 +79,10 @@
                         </div>
                     </div>
 
-                    <!-- Seção de Estatísticas -->
                     <div class="px-4 pb-6 mt-4">
-                        <!-- Contagem Fim de Ano -->
                         <div class="bg-orange-50 border border-orange-100 p-4 rounded-xl mb-5 flex items-center justify-between shadow-sm">
                             <div>
-                                <p class="text-xs font-bold text-orange-800 uppercase tracking-wide">Contagem Regressiva</p>
+                                <p class="text-xs font-bold text-orange-800 uppercase tracking-wide">Contagem Decrescente</p>
                                 <p class="text-sm font-medium text-orange-600 mt-0.5">Faltam <strong id="days-left" class="text-lg"></strong> dias para o fim do ano!</p>
                             </div>
                             <i data-lucide="calendar" class="text-orange-400 opacity-80 w-8 h-8"></i>
@@ -95,7 +93,7 @@
                             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-50 flex items-center gap-3">
                                 <div class="w-4 h-4 rounded-full bg-blue-500"></div>
                                 <div>
-                                    <p class="text-xs text-gray-500 font-semibold uppercase">Academia</p>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Ginásio</p>
                                     <p id="stat-academia" class="text-xl font-bold text-gray-800">0</p>
                                 </div>
                             </div>
@@ -150,7 +148,7 @@
             </button>
         </nav>
 
-        <!-- Modal de Edição (Escondido por padrão) -->
+        <!-- Modal de Edição -->
         <div id="edit-modal" class="hidden absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex-col justify-end fade-in">
             <div class="bg-white rounded-t-3xl p-6 pb-8 shadow-2xl slide-up">
                 <div class="flex justify-between items-center mb-6">
@@ -163,7 +161,7 @@
                     </button>
                 </div>
                 <div id="modal-buttons" class="grid grid-cols-2 gap-3 mb-4">
-                    <!-- Botões de edição gerados via JS -->
+                    <!-- Botões gerados via JS -->
                 </div>
             </div>
         </div>
@@ -175,6 +173,23 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { initializeFirestore, persistentLocalCache, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ==========================================
+        // REGISTO DO SERVICE WORKER (OFFLINE PWA)
+        // ==========================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Verifica se o ambiente suporta o registo (HTTP/HTTPS). 
+                // Ignora em ambientes de pré-visualização (como blob: ou data:) para não poluir a consola.
+                if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+                    navigator.serviceWorker.register('./sw.js')
+                        .then(reg => console.log('Service Worker registado com sucesso!', reg.scope))
+                        .catch(err => console.log('Aviso: Erro ao registar Service Worker (normal em previews/local):', err));
+                } else {
+                    console.log('Ambiente de pré-visualização detetado. O registo do Service Worker foi ignorado para evitar erros.');
+                }
+            });
+        }
 
         // ==========================================
         // CONFIGURAÇÕES E ESTADOS GLOBAIS
@@ -190,13 +205,12 @@
         };
 
         const activityTypes = [
-            { id: 'academia', label: 'Academia', icon: 'dumbbell', color: 'bg-blue-500' },
-            { id: 'funcional', label: 'Funcional', icon: 'activity-square', color: 'bg-red-500' },
-            { id: 'pilates', label: 'Pilates', icon: 'accessibility', color: 'bg-green-500' },
-            { id: 'futebol', label: 'Futebol', icon: 'goal', color: 'bg-yellow-400' }
+            { id: 'academia', label: 'Ginásio', icon: 'dumbbell' },
+            { id: 'funcional', label: 'Funcional', icon: 'activity-square' },
+            { id: 'pilates', label: 'Pilates', icon: 'accessibility' },
+            { id: 'futebol', label: 'Futebol', icon: 'goal' }
         ];
 
-        // Inicializa Lucide Icons
         lucide.createIcons();
 
         // ==========================================
@@ -214,31 +228,15 @@
         };
         const todayStr = getLocalYYYYMMDD(new Date());
 
-        // Injeta um Service Worker básico para permitir o cache e instalação Offline PWA
-        const injectServiceWorker = () => {
-            if ('serviceWorker' in navigator) {
-                const swCode = `
-                    self.addEventListener('install', (e) => { self.skipWaiting(); });
-                    self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(caches.match(e.request).then(res => res || fetch(e.request).catch(() => console.log('Offline mode active'))));
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log('SW setup error', err));
-            }
-        };
-        injectServiceWorker();
-
         // ==========================================
-        // FIREBASE SETUP
+        // FIREBASE SETUP (COM PERSISTÊNCIA OFFLINE)
         // ==========================================
         try {
             const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             
-            // Ativando a persistência OFFLINE do banco de dados!
+            // Ativa a cache offline do Firestore
             db = initializeFirestore(app, {
                 localCache: persistentLocalCache()
             });
@@ -257,7 +255,7 @@
                 if (user) listenToActivities();
             });
         } catch (error) {
-            console.error("Erro ao inicializar Firebase:", error);
+            console.error("Erro ao inicializar o Firebase:", error);
         }
 
         let unsubscribeSnapshot = null;
@@ -278,7 +276,7 @@
             const currentData = state.activitiesData[dateStr] || {};
             const currentValue = currentData[activityId] || false;
             
-            // Otimista: atualiza a UI instantaneamente
+            // Atualização Otimista
             if(!state.activitiesData[dateStr]) state.activitiesData[dateStr] = {};
             state.activitiesData[dateStr][activityId] = !currentValue;
             updateAllUI();
@@ -286,12 +284,12 @@
             try {
                 await setDoc(docRef, { [activityId]: !currentValue }, { merge: true });
             } catch (error) {
-                console.error("Erro ao salvar:", error);
+                console.error("Erro ao guardar:", error);
             }
         };
 
         // ==========================================
-        // ATUALIZAÇÃO DE INTERFACE (RENDER)
+        // ATUALIZAÇÃO DE INTERFACE
         // ==========================================
         const updateAllUI = () => {
             renderHome();
@@ -300,7 +298,6 @@
             if (state.selectedEditDate) renderModal();
         };
 
-        // Renderiza Aba 1: Home
         const renderHome = () => {
             const todayDateObj = new Date();
             document.getElementById('today-date-display').textContent = `${todayDateObj.getDate()} de ${getMonthName(todayDateObj.getMonth())}, ${todayDateObj.getFullYear()}`;
@@ -325,7 +322,6 @@
             lucide.createIcons();
         };
 
-        // Renderiza Aba 2: Calendário
         const renderCalendar = () => {
             const year = state.currentDate.getFullYear();
             const month = state.currentDate.getMonth();
@@ -337,14 +333,12 @@
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
 
-            // Espaços vazios
             for (let i = 0; i < firstDayIndex; i++) {
                 const emptyDiv = document.createElement('div');
                 emptyDiv.className = 'h-14';
                 grid.appendChild(emptyDiv);
             }
 
-            // Dias
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayData = state.activitiesData[dateStr] || {};
@@ -355,7 +349,7 @@
                 dayDiv.onclick = () => { state.selectedEditDate = dateStr; renderModal(); };
 
                 let dotsHTML = '';
-                if(dayData.academia) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm" title="Academia"></div>`;
+                if(dayData.academia) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm" title="Ginásio"></div>`;
                 if(dayData.funcional) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm" title="Funcional"></div>`;
                 if(dayData.pilates) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm" title="Pilates"></div>`;
                 if(dayData.futebol) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-sm" title="Futebol"></div>`;
@@ -368,7 +362,6 @@
             }
         };
 
-        // Renderiza Aba 2: Estatísticas e Fim de ano
         const renderStats = () => {
             let ac = 0, fu = 0, pi = 0, ft = 0;
             Object.values(state.activitiesData).forEach(day => {
@@ -390,7 +383,6 @@
             document.getElementById('days-left').textContent = daysLeft;
         };
 
-        // Modal de Edição
         const renderModal = () => {
             const modal = document.getElementById('edit-modal');
             if (!state.selectedEditDate) {
@@ -425,10 +417,8 @@
         };
 
         // ==========================================
-        // EVENT LISTENERS E NAVEGAÇÃO
+        // NAVEGAÇÃO E EVENTOS
         // ==========================================
-        
-        // Troca de Abas
         const navHomeBtn = document.getElementById('nav-home');
         const navCalendarBtn = document.getElementById('nav-calendar');
         const tabHome = document.getElementById('tab-home');
@@ -436,8 +426,6 @@
 
         const switchTab = (tab) => {
             state.activeTab = tab;
-            
-            // Busca o ícone corretamente independentemente de já ter virado um <svg> pela biblioteca Lucide ou ainda ser <i>
             const homeIcon = navHomeBtn.querySelector('svg') || navHomeBtn.querySelector('i');
             const calendarIcon = navCalendarBtn.querySelector('svg') || navCalendarBtn.querySelector('i');
 
@@ -446,34 +434,22 @@
                 tabCalendar.classList.add('hidden'); tabCalendar.classList.remove('flex');
                 
                 navHomeBtn.classList.replace('text-gray-400', 'text-green-600');
-                if(homeIcon) {
-                    homeIcon.classList.remove('stroke-2');
-                    homeIcon.classList.add('stroke-[2.5px]');
-                }
+                if(homeIcon) { homeIcon.classList.remove('stroke-2'); homeIcon.classList.add('stroke-[2.5px]'); }
                 navHomeBtn.querySelector('div').classList.add('scale-110');
                 
                 navCalendarBtn.classList.replace('text-green-600', 'text-gray-400');
-                if(calendarIcon) {
-                    calendarIcon.classList.remove('stroke-[2.5px]');
-                    calendarIcon.classList.add('stroke-2');
-                }
+                if(calendarIcon) { calendarIcon.classList.remove('stroke-[2.5px]'); calendarIcon.classList.add('stroke-2'); }
                 navCalendarBtn.querySelector('div').classList.remove('scale-110');
             } else {
                 tabCalendar.classList.remove('hidden'); tabCalendar.classList.add('flex');
                 tabHome.classList.add('hidden'); tabHome.classList.remove('flex');
 
                 navCalendarBtn.classList.replace('text-gray-400', 'text-green-600');
-                if(calendarIcon) {
-                    calendarIcon.classList.remove('stroke-2');
-                    calendarIcon.classList.add('stroke-[2.5px]');
-                }
+                if(calendarIcon) { calendarIcon.classList.remove('stroke-2'); calendarIcon.classList.add('stroke-[2.5px]'); }
                 navCalendarBtn.querySelector('div').classList.add('scale-110');
                 
                 navHomeBtn.classList.replace('text-green-600', 'text-gray-400');
-                if(homeIcon) {
-                    homeIcon.classList.remove('stroke-[2.5px]');
-                    homeIcon.classList.add('stroke-2');
-                }
+                if(homeIcon) { homeIcon.classList.remove('stroke-[2.5px]'); homeIcon.classList.add('stroke-2'); }
                 navHomeBtn.querySelector('div').classList.remove('scale-110');
             }
         };
@@ -481,7 +457,6 @@
         navHomeBtn.onclick = () => switchTab('home');
         navCalendarBtn.onclick = () => switchTab('calendar');
 
-        // Controles do Calendário
         document.getElementById('btn-prev-month').onclick = () => {
             state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() - 1, 1);
             renderCalendar();
@@ -495,13 +470,11 @@
             renderCalendar();
         };
 
-        // Fechar modal
         document.getElementById('btn-close-modal').onclick = () => {
             state.selectedEditDate = null;
             renderModal();
         };
 
-        // Inicialização primária
         updateAllUI();
 
     </script>
