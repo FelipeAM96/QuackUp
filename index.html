@@ -21,20 +21,22 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Otimização para impedir que toques prolongados no telemóvel selecionem elementos sem querer */
+        .prevent-select { -webkit-user-select: none; user-select: none; touch-action: manipulation; }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50 font-sans text-gray-900 flex justify-center selection:bg-green-200">
+<body class="min-h-screen bg-gray-50 font-sans text-gray-900 flex justify-center prevent-select">
 
     <!-- Container imitando ecrã de telemóvel -->
     <div class="w-full max-w-md bg-gray-50 h-screen flex flex-col relative shadow-2xl overflow-hidden sm:rounded-3xl sm:h-[95vh] sm:my-auto sm:border-[8px] sm:border-gray-900">
         
         <!-- Header -->
         <header class="bg-white pt-6 pb-4 px-4 shadow-sm flex items-center justify-center gap-3 z-20 shrink-0">
-            <div class="w-12 h-12 flex items-center justify-center relative">
+            <div class="w-12 h-12 flex items-center justify-center relative pointer-events-none">
                 <img id="logo-img" src="img/QuackUp.png" alt="QuackUp Logo" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <span class="text-3xl absolute hidden">🦆</span>
             </div>
-            <h1 class="text-2xl font-black text-gray-800 tracking-tight">Quack<span class="text-green-500">Up</span></h1>
+            <h1 class="text-2xl font-black text-gray-800 tracking-tight pointer-events-none">Quack<span class="text-green-500">Up</span></h1>
         </header>
 
         <!-- Main Content -->
@@ -42,7 +44,7 @@
             
             <!-- ABA 1: HOME -->
             <div id="tab-home" class="flex flex-col h-full px-4 py-6 overflow-y-auto no-scrollbar pb-28 fade-in">
-                <div class="text-center mb-8">
+                <div class="text-center mb-8 pointer-events-none">
                     <h2 class="text-gray-500 text-sm uppercase tracking-wider font-semibold">Hoje</h2>
                     <p id="today-date-display" class="text-2xl font-bold text-gray-800"></p>
                     <p class="text-gray-500 mt-2 text-sm">O que treinou hoje?</p>
@@ -55,23 +57,23 @@
             <!-- ABA 2: CALENDÁRIO & ESTATÍSTICAS -->
             <div id="tab-calendar" class="hidden flex-col h-full fade-in">
                 <div class="bg-white px-4 py-4 border-b border-gray-100 flex items-center justify-between shadow-sm rounded-b-xl z-10 shrink-0">
-                    <button id="btn-prev-month" class="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors active:scale-95">
-                        <i data-lucide="chevron-left"></i>
+                    <button id="btn-prev-month" class="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors active:scale-95 touch-manipulation">
+                        <i data-lucide="chevron-left" class="pointer-events-none"></i>
                     </button>
                     <div class="flex flex-col items-center">
-                        <h2 id="calendar-month-year" class="text-lg font-bold text-gray-800 capitalize"></h2>
-                        <button id="btn-go-today" class="text-[10px] uppercase font-bold tracking-wider text-green-600 bg-green-50 px-3 py-1 rounded-full mt-1 active:bg-green-100 transition-colors">
+                        <h2 id="calendar-month-year" class="text-lg font-bold text-gray-800 capitalize pointer-events-none"></h2>
+                        <button id="btn-go-today" class="text-[10px] uppercase font-bold tracking-wider text-green-600 bg-green-50 px-3 py-1 rounded-full mt-1 active:bg-green-100 transition-colors touch-manipulation">
                             Voltar para Hoje
                         </button>
                     </div>
-                    <button id="btn-next-month" class="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors active:scale-95">
-                        <i data-lucide="chevron-right"></i>
+                    <button id="btn-next-month" class="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors active:scale-95 touch-manipulation">
+                        <i data-lucide="chevron-right" class="pointer-events-none"></i>
                     </button>
                 </div>
 
                 <div class="flex-1 overflow-y-auto no-scrollbar pb-28">
                     <div class="p-4">
-                        <div class="grid grid-cols-7 mb-2 text-center text-xs font-bold text-gray-400 uppercase">
+                        <div class="grid grid-cols-7 mb-2 text-center text-xs font-bold text-gray-400 uppercase pointer-events-none">
                             <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
                         </div>
                         <div id="calendar-grid" class="grid grid-cols-7 gap-1">
@@ -80,7 +82,7 @@
                     </div>
 
                     <div class="px-4 pb-6 mt-4">
-                        <div class="bg-orange-50 border border-orange-100 p-4 rounded-xl mb-5 flex items-center justify-between shadow-sm">
+                        <div class="bg-orange-50 border border-orange-100 p-4 rounded-xl mb-5 flex items-center justify-between shadow-sm pointer-events-none">
                             <div>
                                 <p class="text-xs font-bold text-orange-800 uppercase tracking-wide">Contagem Decrescente</p>
                                 <p class="text-sm font-medium text-orange-600 mt-0.5">Faltam <strong id="days-left" class="text-lg"></strong> dias para o fim do ano!</p>
@@ -88,8 +90,8 @@
                             <i data-lucide="calendar" class="text-orange-400 opacity-80 w-8 h-8"></i>
                         </div>
 
-                        <h3 class="text-lg font-bold text-gray-800 mb-4 px-1">Estatísticas Totais</h3>
-                        <div class="grid grid-cols-2 gap-3 mb-3">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 px-1 pointer-events-none">Estatísticas Totais</h3>
+                        <div class="grid grid-cols-2 gap-3 mb-3 pointer-events-none">
                             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-50 flex items-center gap-3">
                                 <div class="w-4 h-4 rounded-full bg-blue-500"></div>
                                 <div>
@@ -120,7 +122,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-gray-800 text-white p-5 rounded-xl shadow-md flex justify-between items-center">
+                        <div class="bg-gray-800 text-white p-5 rounded-xl shadow-md flex justify-between items-center pointer-events-none">
                             <div>
                                 <p class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Total de Atividades</p>
                                 <p id="stat-total" class="text-3xl font-black mt-1">0</p>
@@ -134,17 +136,17 @@
 
         <!-- Bottom Navigation -->
         <nav class="absolute bottom-0 w-full bg-white border-t border-gray-200 flex justify-around items-center pb-safe pt-2 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-20 shrink-0">
-            <button id="nav-home" class="flex flex-col items-center p-3 w-24 rounded-xl transition-all text-green-600 font-bold group">
-                <div class="mb-1 transition-transform group-active:scale-95 scale-110">
+            <button id="nav-home" class="flex flex-col items-center p-3 w-24 rounded-xl transition-all text-green-600 font-bold group touch-manipulation">
+                <div class="mb-1 transition-transform group-active:scale-95 scale-110 pointer-events-none">
                     <i data-lucide="home" class="stroke-[2.5px]"></i>
                 </div>
-                <span class="text-[11px] uppercase tracking-wide">Hoje</span>
+                <span class="text-[11px] uppercase tracking-wide pointer-events-none">Hoje</span>
             </button>
-            <button id="nav-calendar" class="flex flex-col items-center p-3 w-24 rounded-xl transition-all text-gray-400 hover:text-gray-600 group">
-                <div class="mb-1 transition-transform group-active:scale-95">
+            <button id="nav-calendar" class="flex flex-col items-center p-3 w-24 rounded-xl transition-all text-gray-400 hover:text-gray-600 group touch-manipulation">
+                <div class="mb-1 transition-transform group-active:scale-95 pointer-events-none">
                     <i data-lucide="calendar" class="stroke-2"></i>
                 </div>
-                <span class="text-[11px] uppercase tracking-wide">Estatísticas</span>
+                <span class="text-[11px] uppercase tracking-wide pointer-events-none">Estatísticas</span>
             </button>
         </nav>
 
@@ -152,12 +154,12 @@
         <div id="edit-modal" class="hidden absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex-col justify-end fade-in">
             <div class="bg-white rounded-t-3xl p-6 pb-8 shadow-2xl slide-up">
                 <div class="flex justify-between items-center mb-6">
-                    <div>
+                    <div class="pointer-events-none">
                         <h3 class="text-xl font-bold text-gray-800">Editar Dia</h3>
                         <p id="modal-date-display" class="text-sm text-gray-500"></p>
                     </div>
-                    <button id="btn-close-modal" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-600 transition-colors active:scale-95">
-                        <i data-lucide="x" class="w-5 h-5"></i>
+                    <button id="btn-close-modal" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-600 transition-colors active:scale-95 touch-manipulation">
+                        <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
                     </button>
                 </div>
                 <div id="modal-buttons" class="grid grid-cols-2 gap-3 mb-4">
@@ -177,8 +179,11 @@
             window.addEventListener('load', () => {
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
                     navigator.serviceWorker.register('./sw.js')
-                        .then(reg => console.log('Service Worker registado com sucesso!', reg.scope))
-                        .catch(err => console.log('Aviso: Erro ao registar Service Worker:', err));
+                        .then(reg => {
+                            console.log('Service Worker registado!', reg.scope);
+                            reg.update(); // Força a atualização do cache quando entra online
+                        })
+                        .catch(err => console.log('Aviso SW:', err));
                 }
             });
         }
@@ -188,7 +193,7 @@
         // ==========================================
         const state = {
             activeTab: 'home',
-            activitiesData: {}, // Os dados serão guardados aqui e no LocalStorage
+            activitiesData: {}, 
             currentDate: new Date(),
             selectedEditDate: null
         };
@@ -233,19 +238,20 @@
         };
 
         const toggleActivity = (activityId, dateStr) => {
-            // Inicializa a data se não existir
             if(!state.activitiesData[dateStr]) {
                 state.activitiesData[dateStr] = {};
             }
             
-            // Alterna o valor (true/false)
             const currentValue = state.activitiesData[dateStr][activityId] || false;
             state.activitiesData[dateStr][activityId] = !currentValue;
 
-            // Guarda no telemóvel (LocalStorage)
-            localStorage.setItem('quackup_activities_data', JSON.stringify(state.activitiesData));
+            try {
+                // Guarda no telemóvel
+                localStorage.setItem('quackup_activities_data', JSON.stringify(state.activitiesData));
+            } catch (error) {
+                console.error("Não foi possível salvar (possível limite de memória ou navegação privada)", error);
+            }
             
-            // Atualiza a Interface
             updateAllUI();
         };
 
@@ -270,14 +276,23 @@
             activityTypes.forEach(act => {
                 const isActive = todayData[act.id];
                 const btn = document.createElement('button');
-                btn.className = `flex items-center p-5 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border ${isActive ? 'bg-green-500 text-white shadow-green-200 border-green-500' : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-100'}`;
+                btn.type = 'button';
+                // Adicionado w-full, cursor-pointer e touch-manipulation para ser perfeito no mobile
+                btn.className = `w-full flex items-center p-5 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border cursor-pointer select-none touch-manipulation ${isActive ? 'bg-green-500 text-white shadow-green-200 border-green-500' : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-100'}`;
+                
+                // pointer-events-none garante que o clique bate no botão e não no ícone (bug iOS Safari)
                 btn.innerHTML = `
-                    <div class="p-3 rounded-full mr-4 ${isActive ? 'bg-green-400' : 'bg-gray-100'}">
+                    <div class="pointer-events-none p-3 rounded-full mr-4 ${isActive ? 'bg-green-400' : 'bg-gray-100'}">
                         <i data-lucide="${act.icon}" class="w-7 h-7 ${isActive ? 'text-white' : 'text-gray-500'}"></i>
                     </div>
-                    <span class="text-xl font-bold">${act.label}</span>
+                    <span class="pointer-events-none text-xl font-bold">${act.label}</span>
                 `;
-                btn.onclick = () => toggleActivity(act.id, todayStr);
+                
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleActivity(act.id, todayStr);
+                });
+                
                 container.appendChild(btn);
             });
             lucide.createIcons();
@@ -306,18 +321,23 @@
                 const isToday = dateStr === todayStr;
 
                 const dayDiv = document.createElement('div');
-                dayDiv.className = `h-14 flex flex-col items-center justify-start p-1 rounded-lg border cursor-pointer active:scale-95 transition-all ${isToday ? 'border-gray-400 bg-gray-50' : 'border-transparent hover:bg-gray-100'}`;
-                dayDiv.onclick = () => { state.selectedEditDate = dateStr; renderModal(); };
+                dayDiv.className = `h-14 flex flex-col items-center justify-start p-1 rounded-lg border cursor-pointer select-none active:scale-95 transition-all touch-manipulation ${isToday ? 'border-gray-400 bg-gray-50' : 'border-transparent hover:bg-gray-100'}`;
+                
+                dayDiv.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    state.selectedEditDate = dateStr; 
+                    renderModal();
+                });
 
                 let dotsHTML = '';
-                if(dayData.academia) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm" title="Ginásio"></div>`;
-                if(dayData.funcional) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm" title="Funcional"></div>`;
-                if(dayData.pilates) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm" title="Pilates"></div>`;
-                if(dayData.futebol) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-sm" title="Futebol"></div>`;
+                if(dayData.academia) dotsHTML += `<div class="pointer-events-none w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm"></div>`;
+                if(dayData.funcional) dotsHTML += `<div class="pointer-events-none w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm"></div>`;
+                if(dayData.pilates) dotsHTML += `<div class="pointer-events-none w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm"></div>`;
+                if(dayData.futebol) dotsHTML += `<div class="pointer-events-none w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-sm"></div>`;
 
                 dayDiv.innerHTML = `
-                    <span class="text-sm font-semibold ${isToday ? 'text-black' : 'text-gray-600'}">${day}</span>
-                    <div class="flex flex-wrap justify-center gap-1 mt-1 w-full px-1">${dotsHTML}</div>
+                    <span class="pointer-events-none text-sm font-semibold ${isToday ? 'text-black' : 'text-gray-600'}">${day}</span>
+                    <div class="pointer-events-none flex flex-wrap justify-center gap-1 mt-1 w-full px-1">${dotsHTML}</div>
                 `;
                 grid.appendChild(dayDiv);
             }
@@ -366,12 +386,19 @@
             activityTypes.forEach(act => {
                 const isActive = dayData[act.id];
                 const btn = document.createElement('button');
-                btn.className = `flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border ${isActive ? 'bg-green-500 text-white shadow-green-200 border-green-500' : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-200'}`;
+                btn.type = 'button';
+                btn.className = `flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border cursor-pointer select-none touch-manipulation ${isActive ? 'bg-green-500 text-white shadow-green-200 border-green-500' : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-200'}`;
+                
                 btn.innerHTML = `
-                    <i data-lucide="${act.icon}" class="w-7 h-7 mb-2 ${isActive ? 'text-white' : 'text-gray-400'}"></i>
-                    <span class="text-sm font-bold">${act.label}</span>
+                    <i data-lucide="${act.icon}" class="pointer-events-none w-7 h-7 mb-2 ${isActive ? 'text-white' : 'text-gray-400'}"></i>
+                    <span class="pointer-events-none text-sm font-bold">${act.label}</span>
                 `;
-                btn.onclick = () => toggleActivity(act.id, state.selectedEditDate);
+                
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleActivity(act.id, state.selectedEditDate);
+                });
+                
                 container.appendChild(btn);
             });
             lucide.createIcons();
@@ -415,26 +442,26 @@
             }
         };
 
-        navHomeBtn.onclick = () => switchTab('home');
-        navCalendarBtn.onclick = () => switchTab('calendar');
+        navHomeBtn.addEventListener('click', () => switchTab('home'));
+        navCalendarBtn.addEventListener('click', () => switchTab('calendar'));
 
-        document.getElementById('btn-prev-month').onclick = () => {
+        document.getElementById('btn-prev-month').addEventListener('click', () => {
             state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() - 1, 1);
             renderCalendar();
-        };
-        document.getElementById('btn-next-month').onclick = () => {
+        });
+        document.getElementById('btn-next-month').addEventListener('click', () => {
             state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + 1, 1);
             renderCalendar();
-        };
-        document.getElementById('btn-go-today').onclick = () => {
+        });
+        document.getElementById('btn-go-today').addEventListener('click', () => {
             state.currentDate = new Date();
             renderCalendar();
-        };
+        });
 
-        document.getElementById('btn-close-modal').onclick = () => {
+        document.getElementById('btn-close-modal').addEventListener('click', () => {
             state.selectedEditDate = null;
             renderModal();
-        };
+        });
 
         // INICIAR A APLICAÇÃO
         loadData();
