@@ -429,27 +429,44 @@
 
         const switchTab = (tab) => {
             state.activeTab = tab;
+            
+            // Busca o ícone corretamente independentemente de já ter virado um <svg> pela biblioteca Lucide ou ainda ser <i>
+            const homeIcon = navHomeBtn.querySelector('svg') || navHomeBtn.querySelector('i');
+            const calendarIcon = navCalendarBtn.querySelector('svg') || navCalendarBtn.querySelector('i');
+
             if (tab === 'home') {
                 tabHome.classList.remove('hidden'); tabHome.classList.add('flex');
                 tabCalendar.classList.add('hidden'); tabCalendar.classList.remove('flex');
                 
                 navHomeBtn.classList.replace('text-gray-400', 'text-green-600');
-                navHomeBtn.querySelector('i').classList.replace('stroke-2', 'stroke-[2.5px]');
+                if(homeIcon) {
+                    homeIcon.classList.remove('stroke-2');
+                    homeIcon.classList.add('stroke-[2.5px]');
+                }
                 navHomeBtn.querySelector('div').classList.add('scale-110');
                 
                 navCalendarBtn.classList.replace('text-green-600', 'text-gray-400');
-                navCalendarBtn.querySelector('i').classList.replace('stroke-[2.5px]', 'stroke-2');
+                if(calendarIcon) {
+                    calendarIcon.classList.remove('stroke-[2.5px]');
+                    calendarIcon.classList.add('stroke-2');
+                }
                 navCalendarBtn.querySelector('div').classList.remove('scale-110');
             } else {
                 tabCalendar.classList.remove('hidden'); tabCalendar.classList.add('flex');
                 tabHome.classList.add('hidden'); tabHome.classList.remove('flex');
 
                 navCalendarBtn.classList.replace('text-gray-400', 'text-green-600');
-                navCalendarBtn.querySelector('i').classList.replace('stroke-2', 'stroke-[2.5px]');
+                if(calendarIcon) {
+                    calendarIcon.classList.remove('stroke-2');
+                    calendarIcon.classList.add('stroke-[2.5px]');
+                }
                 navCalendarBtn.querySelector('div').classList.add('scale-110');
                 
                 navHomeBtn.classList.replace('text-green-600', 'text-gray-400');
-                navHomeBtn.querySelector('i').classList.replace('stroke-[2.5px]', 'stroke-2');
+                if(homeIcon) {
+                    homeIcon.classList.remove('stroke-[2.5px]');
+                    homeIcon.classList.add('stroke-2');
+                }
                 navHomeBtn.querySelector('div').classList.remove('scale-110');
             }
         };
