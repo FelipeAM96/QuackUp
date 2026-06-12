@@ -168,25 +168,17 @@
 
     </div>
 
-    <!-- Firebase e Lógica Principal -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { initializeFirestore, persistentLocalCache, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+    <!-- Lógica Principal (Sem Firebase, usando LocalStorage) -->
+    <script>
         // ==========================================
         // REGISTO DO SERVICE WORKER (OFFLINE PWA)
         // ==========================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Verifica se o ambiente suporta o registo (HTTP/HTTPS). 
-                // Ignora em ambientes de pré-visualização (como blob: ou data:) para não poluir a consola.
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
                     navigator.serviceWorker.register('./sw.js')
                         .then(reg => console.log('Service Worker registado com sucesso!', reg.scope))
-                        .catch(err => console.log('Aviso: Erro ao registar Service Worker (normal em previews/local):', err));
-                } else {
-                    console.log('Ambiente de pré-visualização detetado. O registo do Service Worker foi ignorado para evitar erros.');
+                        .catch(err => console.log('Aviso: Erro ao registar Service Worker:', err));
                 }
             });
         }
@@ -194,12 +186,9 @@
         // ==========================================
         // CONFIGURAÇÕES E ESTADOS GLOBAIS
         // ==========================================
-        let app, auth, db, user = null;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'quackup-app-id';
-
         const state = {
             activeTab: 'home',
-            activitiesData: {},
+            activitiesData: {}, // Os dados serão guardados aqui e no LocalStorage
             currentDate: new Date(),
             selectedEditDate: null
         };
@@ -229,63 +218,35 @@
         const todayStr = getLocalYYYYMMDD(new Date());
 
         // ==========================================
-        // FIREBASE SETUP (COM PERSISTÊNCIA OFFLINE)
+        // LOCAL STORAGE (GUARDA DADOS NO DISPOSITIVO)
         // ==========================================
-        try {
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            
-            // Ativa a cache offline do Firestore
-            db = initializeFirestore(app, {
-                localCache: persistentLocalCache()
-            });
-
-            const initAuth = async () => {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+        const loadData = () => {
+            try {
+                const savedData = localStorage.getItem('quackup_activities_data');
+                if (savedData) {
+                    state.activitiesData = JSON.parse(savedData);
                 }
-            };
-            initAuth();
-
-            onAuthStateChanged(auth, (currentUser) => {
-                user = currentUser;
-                if (user) listenToActivities();
-            });
-        } catch (error) {
-            console.error("Erro ao inicializar o Firebase:", error);
-        }
-
-        let unsubscribeSnapshot = null;
-        const listenToActivities = () => {
-            if (unsubscribeSnapshot) unsubscribeSnapshot();
-            const activitiesRef = collection(db, 'artifacts', appId, 'users', user.uid, 'activities');
-            unsubscribeSnapshot = onSnapshot(activitiesRef, (snapshot) => {
-                const dataMap = {};
-                snapshot.forEach(doc => { dataMap[doc.id] = doc.data(); });
-                state.activitiesData = dataMap;
-                updateAllUI();
-            }, (error) => console.error("Erro no Firestore:", error));
+            } catch (error) {
+                console.error("Erro ao carregar dados do LocalStorage:", error);
+            }
+            updateAllUI();
         };
 
-        const toggleActivity = async (activityId, dateStr) => {
-            if (!user) return;
-            const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'activities', dateStr);
-            const currentData = state.activitiesData[dateStr] || {};
-            const currentValue = currentData[activityId] || false;
-            
-            // Atualização Otimista
-            if(!state.activitiesData[dateStr]) state.activitiesData[dateStr] = {};
-            state.activitiesData[dateStr][activityId] = !currentValue;
-            updateAllUI();
-
-            try {
-                await setDoc(docRef, { [activityId]: !currentValue }, { merge: true });
-            } catch (error) {
-                console.error("Erro ao guardar:", error);
+        const toggleActivity = (activityId, dateStr) => {
+            // Inicializa a data se não existir
+            if(!state.activitiesData[dateStr]) {
+                state.activitiesData[dateStr] = {};
             }
+            
+            // Alterna o valor (true/false)
+            const currentValue = state.activitiesData[dateStr][activityId] || false;
+            state.activitiesData[dateStr][activityId] = !currentValue;
+
+            // Guarda no telemóvel (LocalStorage)
+            localStorage.setItem('quackup_activities_data', JSON.stringify(state.activitiesData));
+            
+            // Atualiza a Interface
+            updateAllUI();
         };
 
         // ==========================================
@@ -475,7 +436,8 @@
             renderModal();
         };
 
-        updateAllUI();
+        // INICIAR A APLICAÇÃO
+        loadData();
 
     </script>
 </body>
