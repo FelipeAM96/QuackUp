@@ -1,0 +1,16 @@
+{
+  "name": "QuackUp",
+  "short_name": "QuackUp",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#22c55e",
+  "icons": [
+    {
+      "src": "img/QuackUp.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
