@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QuackUp</title>
+    <!-- Tailwind CSS para Estilização -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Animações simples para imitar o React */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        .slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        /* Esconder scrollbar mas permitir rolagem */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 font-sans text-gray-900 flex justify-center selection:bg-green-200">
+
+    <!-- Container imitando tela de celular -->
+    <div class="w-full max-w-md bg-gray-50 h-screen flex flex-col relative shadow-2xl overflow-hidden sm:rounded-3xl sm:h-[95vh] sm:my-auto sm:border-[8px] sm:border-gray-900">
+        
+        <!-- Top Header / App Bar -->
+        <header class="bg-white pt-6 pb-4 px-4 shadow-sm flex items-center justify-center gap-3 z-20 shrink-0">
+            <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-green-500 shadow-sm relative">
+                <img id="logo-img" src="img/QuackUp.png" alt="QuackUp Logo" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <span class="text-xl absolute hidden">🦆</span>
+            </div>
+            <h1 class="text-2xl font-black text-gray-800 tracking-tight">Quack<span class="text-green-500">Up</span></h1>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-x-hidden relative bg-gray-50">
+            
+            <!-- ABA 1: HOME (HOJE) -->
+            <div id="tab-home" class="flex flex-col h-full px-4 py-6 overflow-y-auto no-scrollbar pb-28 fade-in">
+                <div class="text-center mb-8">
+                    <h2 class="text-gray-500 text-sm uppercase tracking-wider font-semibold">Hoje</h2>
+                    <p id="today-date-display" class="text-2xl font-bold text-gray-800"></p>
+                    <p class="text-gray-500 mt-2 text-sm">O que você treinou hoje?</p>
+                </div>
+                <div id="home-buttons" class="grid grid-cols-1 gap-4 w-full max-w-sm mx-auto">
+                    <!-- Botões gerados via JS -->
+                </div>
+            </div>
+
+            <!-- ABA 2: CALENDÁRIO & ESTATÍSTICAS -->
+            <div id="tab-calendar" class="hidden flex-col h-full fade-in">
+                <!-- Cabeçalho do Calendário -->
+                <div class="bg-white px-4 py-4 border-b border-gray-100 flex items-center justify-between shadow-sm rounded-b-xl z-10 shrink-0">
+                    <button id="btn-prev-month" class="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors active:scale-95">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
+                    <div class="flex flex-col items-center">
+                        <h2 id="calendar-month-year" class="text-lg font-bold text-gray-800 capitalize"></h2>
+                        <button id="btn-go-today" class="text-[10px] uppercase font-bold tracking-wider text-green-600 bg-green-50 px-3 py-1 rounded-full mt-1 active:bg-green-100 transition-colors">
+                            Voltar para Hoje
+                        </button>
+                    </div>
+                    <button id="btn-next-month" class="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors active:scale-95">
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto no-scrollbar pb-28">
+                    <!-- Grid do Calendário -->
+                    <div class="p-4">
+                        <div class="grid grid-cols-7 mb-2 text-center text-xs font-bold text-gray-400 uppercase">
+                            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+                            <!-- Dias gerados via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Seção de Estatísticas -->
+                    <div class="px-4 pb-6 mt-4">
+                        <!-- Contagem Fim de Ano -->
+                        <div class="bg-orange-50 border border-orange-100 p-4 rounded-xl mb-5 flex items-center justify-between shadow-sm">
+                            <div>
+                                <p class="text-xs font-bold text-orange-800 uppercase tracking-wide">Contagem Regressiva</p>
+                                <p class="text-sm font-medium text-orange-600 mt-0.5">Faltam <strong id="days-left" class="text-lg"></strong> dias para o fim do ano!</p>
+                            </div>
+                            <i data-lucide="calendar" class="text-orange-400 opacity-80 w-8 h-8"></i>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 px-1">Estatísticas Totais</h3>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-50 flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-full bg-blue-500"></div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Academia</p>
+                                    <p id="stat-academia" class="text-xl font-bold text-gray-800">0</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-50 flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Funcional</p>
+                                    <p id="stat-funcional" class="text-xl font-bold text-gray-800">0</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-50 flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Pilates</p>
+                                    <p id="stat-pilates" class="text-xl font-bold text-gray-800">0</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-50 flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-full bg-yellow-400"></div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-semibold uppercase">Futebol</p>
+                                    <p id="stat-futebol" class="text-xl font-bold text-gray-800">0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-800 text-white p-5 rounded-xl shadow-md flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Total de Atividades</p>
+                                <p id="stat-total" class="text-3xl font-black mt-1">0</p>
+                            </div>
+                            <i data-lucide="activity" class="text-green-400 opacity-80 w-10 h-10"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="absolute bottom-0 w-full bg-white border-t border-gray-200 flex justify-around items-center pb-safe pt-2 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-20 shrink-0">
+            <button id="nav-home" class="flex flex-col items-center p-3 w-24 rounded-xl transition-all text-green-600 font-bold group">
+                <div class="mb-1 transition-transform group-active:scale-95 scale-110">
+                    <i data-lucide="home" class="stroke-[2.5px]"></i>
+                </div>
+                <span class="text-[11px] uppercase tracking-wide">Hoje</span>
+            </button>
+            <button id="nav-calendar" class="flex flex-col items-center p-3 w-24 rounded-xl transition-all text-gray-400 hover:text-gray-600 group">
+                <div class="mb-1 transition-transform group-active:scale-95">
+                    <i data-lucide="calendar" class="stroke-2"></i>
+                </div>
+                <span class="text-[11px] uppercase tracking-wide">Estatísticas</span>
+            </button>
+        </nav>
+
+        <!-- Modal de Edição (Escondido por padrão) -->
+        <div id="edit-modal" class="hidden absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex-col justify-end fade-in">
+            <div class="bg-white rounded-t-3xl p-6 pb-8 shadow-2xl slide-up">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Editar Dia</h3>
+                        <p id="modal-date-display" class="text-sm text-gray-500"></p>
+                    </div>
+                    <button id="btn-close-modal" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-600 transition-colors active:scale-95">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div id="modal-buttons" class="grid grid-cols-2 gap-3 mb-4">
+                    <!-- Botões de edição gerados via JS -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase e Lógica Principal -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ==========================================
+        // CONFIGURAÇÕES E ESTADOS GLOBAIS
+        // ==========================================
+        let app, auth, db, user = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'quackup-app-id';
+
+        const state = {
+            activeTab: 'home',
+            activitiesData: {},
+            currentDate: new Date(),
+            selectedEditDate: null
+        };
+
+        const activityTypes = [
+            { id: 'academia', label: 'Academia', icon: 'dumbbell', color: 'bg-blue-500' },
+            { id: 'funcional', label: 'Funcional', icon: 'activity-square', color: 'bg-red-500' },
+            { id: 'pilates', label: 'Pilates', icon: 'accessibility', color: 'bg-green-500' },
+            { id: 'futebol', label: 'Futebol', icon: 'goal', color: 'bg-yellow-400' }
+        ];
+
+        // Inicializa Lucide Icons
+        lucide.createIcons();
+
+        // ==========================================
+        // UTILITÁRIOS
+        // ==========================================
+        const getLocalYYYYMMDD = (date) => {
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        };
+        const getMonthName = (monthIndex) => {
+            const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            return months[monthIndex];
+        };
+        const todayStr = getLocalYYYYMMDD(new Date());
+
+        // Injeta PWA Manifest
+        const injectManifest = () => {
+            const manifest = {
+                name: "QuackUp", short_name: "QuackUp", start_url: ".", display: "standalone",
+                background_color: "#f9fafb", theme_color: "#22c55e",
+                icons: [{ src: "img/QuackUp.png", sizes: "192x192 512x512", type: "image/png", purpose: "any maskable" }]
+            };
+            const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            const manifestURL = URL.createObjectURL(blob);
+            const link = document.createElement('link');
+            link.rel = 'manifest'; link.href = manifestURL;
+            document.head.appendChild(link);
+        };
+        injectManifest();
+
+        // ==========================================
+        // FIREBASE SETUP
+        // ==========================================
+        try {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            const initAuth = async () => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
+            initAuth();
+
+            onAuthStateChanged(auth, (currentUser) => {
+                user = currentUser;
+                if (user) listenToActivities();
+            });
+        } catch (error) {
+            console.error("Erro ao inicializar Firebase:", error);
+        }
+
+        let unsubscribeSnapshot = null;
+        const listenToActivities = () => {
+            if (unsubscribeSnapshot) unsubscribeSnapshot();
+            const activitiesRef = collection(db, 'artifacts', appId, 'users', user.uid, 'activities');
+            unsubscribeSnapshot = onSnapshot(activitiesRef, (snapshot) => {
+                const dataMap = {};
+                snapshot.forEach(doc => { dataMap[doc.id] = doc.data(); });
+                state.activitiesData = dataMap;
+                updateAllUI();
+            }, (error) => console.error("Erro no Firestore:", error));
+        };
+
+        const toggleActivity = async (activityId, dateStr) => {
+            if (!user) return;
+            const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'activities', dateStr);
+            const currentData = state.activitiesData[dateStr] || {};
+            const currentValue = currentData[activityId] || false;
+            
+            // Otimista: atualiza a UI instantaneamente
+            if(!state.activitiesData[dateStr]) state.activitiesData[dateStr] = {};
+            state.activitiesData[dateStr][activityId] = !currentValue;
+            updateAllUI();
+
+            try {
+                await setDoc(docRef, { [activityId]: !currentValue }, { merge: true });
+            } catch (error) {
+                console.error("Erro ao salvar:", error);
+            }
+        };
+
+        // ==========================================
+        // ATUALIZAÇÃO DE INTERFACE (RENDER)
+        // ==========================================
+        const updateAllUI = () => {
+            renderHome();
+            renderCalendar();
+            renderStats();
+            if (state.selectedEditDate) renderModal();
+        };
+
+        // Renderiza Aba 1: Home
+        const renderHome = () => {
+            const todayDateObj = new Date();
+            document.getElementById('today-date-display').textContent = `${todayDateObj.getDate()} de ${getMonthName(todayDateObj.getMonth())}, ${todayDateObj.getFullYear()}`;
+            
+            const todayData = state.activitiesData[todayStr] || {};
+            const container = document.getElementById('home-buttons');
+            container.innerHTML = '';
+
+            activityTypes.forEach(act => {
+                const isActive = todayData[act.id];
+                const btn = document.createElement('button');
+                btn.className = `flex items-center p-5 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border ${isActive ? 'bg-green-500 text-white shadow-green-200 border-green-500' : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-100'}`;
+                btn.innerHTML = `
+                    <div class="p-3 rounded-full mr-4 ${isActive ? 'bg-green-400' : 'bg-gray-100'}">
+                        <i data-lucide="${act.icon}" class="w-7 h-7 ${isActive ? 'text-white' : 'text-gray-500'}"></i>
+                    </div>
+                    <span class="text-xl font-bold">${act.label}</span>
+                `;
+                btn.onclick = () => toggleActivity(act.id, todayStr);
+                container.appendChild(btn);
+            });
+            lucide.createIcons();
+        };
+
+        // Renderiza Aba 2: Calendário
+        const renderCalendar = () => {
+            const year = state.currentDate.getFullYear();
+            const month = state.currentDate.getMonth();
+            document.getElementById('calendar-month-year').textContent = `${getMonthName(month)} ${year}`;
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDayIndex = new Date(year, month, 1).getDay();
+
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            // Espaços vazios
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'h-14';
+                grid.appendChild(emptyDiv);
+            }
+
+            // Dias
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayData = state.activitiesData[dateStr] || {};
+                const isToday = dateStr === todayStr;
+
+                const dayDiv = document.createElement('div');
+                dayDiv.className = `h-14 flex flex-col items-center justify-start p-1 rounded-lg border cursor-pointer active:scale-95 transition-all ${isToday ? 'border-gray-400 bg-gray-50' : 'border-transparent hover:bg-gray-100'}`;
+                dayDiv.onclick = () => { state.selectedEditDate = dateStr; renderModal(); };
+
+                let dotsHTML = '';
+                if(dayData.academia) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm" title="Academia"></div>`;
+                if(dayData.funcional) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm" title="Funcional"></div>`;
+                if(dayData.pilates) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm" title="Pilates"></div>`;
+                if(dayData.futebol) dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-sm" title="Futebol"></div>`;
+
+                dayDiv.innerHTML = `
+                    <span class="text-sm font-semibold ${isToday ? 'text-black' : 'text-gray-600'}">${day}</span>
+                    <div class="flex flex-wrap justify-center gap-1 mt-1 w-full px-1">${dotsHTML}</div>
+                `;
+                grid.appendChild(dayDiv);
+            }
+        };
+
+        // Renderiza Aba 2: Estatísticas e Fim de ano
+        const renderStats = () => {
+            let ac = 0, fu = 0, pi = 0, ft = 0;
+            Object.values(state.activitiesData).forEach(day => {
+                if (day.academia) ac++;
+                if (day.funcional) fu++;
+                if (day.pilates) pi++;
+                if (day.futebol) ft++;
+            });
+
+            document.getElementById('stat-academia').textContent = ac;
+            document.getElementById('stat-funcional').textContent = fu;
+            document.getElementById('stat-pilates').textContent = pi;
+            document.getElementById('stat-futebol').textContent = ft;
+            document.getElementById('stat-total').textContent = ac + fu + pi + ft;
+
+            const today = new Date();
+            const endOfYear = new Date(today.getFullYear(), 11, 31);
+            const daysLeft = Math.ceil(Math.abs(endOfYear - today) / (1000 * 60 * 60 * 24));
+            document.getElementById('days-left').textContent = daysLeft;
+        };
+
+        // Modal de Edição
+        const renderModal = () => {
+            const modal = document.getElementById('edit-modal');
+            if (!state.selectedEditDate) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                return;
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            const [y, m, d] = state.selectedEditDate.split('-');
+            const dateObj = new Date(y, m - 1, d);
+            document.getElementById('modal-date-display').textContent = `${dateObj.getDate()} de ${getMonthName(dateObj.getMonth())}, ${dateObj.getFullYear()}`;
+
+            const dayData = state.activitiesData[state.selectedEditDate] || {};
+            const container = document.getElementById('modal-buttons');
+            container.innerHTML = '';
+
+            activityTypes.forEach(act => {
+                const isActive = dayData[act.id];
+                const btn = document.createElement('button');
+                btn.className = `flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border ${isActive ? 'bg-green-500 text-white shadow-green-200 border-green-500' : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-200'}`;
+                btn.innerHTML = `
+                    <i data-lucide="${act.icon}" class="w-7 h-7 mb-2 ${isActive ? 'text-white' : 'text-gray-400'}"></i>
+                    <span class="text-sm font-bold">${act.label}</span>
+                `;
+                btn.onclick = () => toggleActivity(act.id, state.selectedEditDate);
+                container.appendChild(btn);
+            });
+            lucide.createIcons();
+        };
+
+        // ==========================================
+        // EVENT LISTENERS E NAVEGAÇÃO
+        // ==========================================
+        
+        // Troca de Abas
+        const navHomeBtn = document.getElementById('nav-home');
+        const navCalendarBtn = document.getElementById('nav-calendar');
+        const tabHome = document.getElementById('tab-home');
+        const tabCalendar = document.getElementById('tab-calendar');
+
+        const switchTab = (tab) => {
+            state.activeTab = tab;
+            if (tab === 'home') {
+                tabHome.classList.remove('hidden'); tabHome.classList.add('flex');
+                tabCalendar.classList.add('hidden'); tabCalendar.classList.remove('flex');
+                
+                navHomeBtn.classList.replace('text-gray-400', 'text-green-600');
+                navHomeBtn.querySelector('i').classList.replace('stroke-2', 'stroke-[2.5px]');
+                navHomeBtn.querySelector('div').classList.add('scale-110');
+                
+                navCalendarBtn.classList.replace('text-green-600', 'text-gray-400');
+                navCalendarBtn.querySelector('i').classList.replace('stroke-[2.5px]', 'stroke-2');
+                navCalendarBtn.querySelector('div').classList.remove('scale-110');
+            } else {
+                tabCalendar.classList.remove('hidden'); tabCalendar.classList.add('flex');
+                tabHome.classList.add('hidden'); tabHome.classList.remove('flex');
+
+                navCalendarBtn.classList.replace('text-gray-400', 'text-green-600');
+                navCalendarBtn.querySelector('i').classList.replace('stroke-2', 'stroke-[2.5px]');
+                navCalendarBtn.querySelector('div').classList.add('scale-110');
+                
+                navHomeBtn.classList.replace('text-green-600', 'text-gray-400');
+                navHomeBtn.querySelector('i').classList.replace('stroke-[2.5px]', 'stroke-2');
+                navHomeBtn.querySelector('div').classList.remove('scale-110');
+            }
+        };
+
+        navHomeBtn.onclick = () => switchTab('home');
+        navCalendarBtn.onclick = () => switchTab('calendar');
+
+        // Controles do Calendário
+        document.getElementById('btn-prev-month').onclick = () => {
+            state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() - 1, 1);
+            renderCalendar();
+        };
+        document.getElementById('btn-next-month').onclick = () => {
+            state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + 1, 1);
+            renderCalendar();
+        };
+        document.getElementById('btn-go-today').onclick = () => {
+            state.currentDate = new Date();
+            renderCalendar();
+        };
+
+        // Fechar modal
+        document.getElementById('btn-close-modal').onclick = () => {
+            state.selectedEditDate = null;
+            renderModal();
+        };
+
+        // Inicialização primária
+        updateAllUI();
+
+    </script>
+</body>
+</html>
