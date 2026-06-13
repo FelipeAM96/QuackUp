@@ -37,7 +37,13 @@
     <div class="w-full max-w-md bg-gray-50 dark:bg-gray-900 h-screen flex flex-col relative shadow-2xl overflow-hidden sm:rounded-3xl sm:h-[95vh] sm:my-auto sm:border-[8px] sm:border-gray-900 dark:sm:border-gray-700 transition-colors duration-300">
         
         <!-- Header -->
-        <header class="bg-white dark:bg-gray-800 pt-6 pb-4 px-4 shadow-sm flex items-center justify-center gap-3 z-20 shrink-0 transition-colors duration-300">
+        <header class="bg-white dark:bg-gray-800 pt-6 pb-4 px-4 shadow-sm flex items-center justify-center gap-3 z-20 shrink-0 transition-colors duration-300 relative">
+            
+            <!-- Versão no Cantinho -->
+            <div class="absolute top-4 right-4 bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-300 text-[10px] font-bold px-2 py-1 rounded-lg pointer-events-none border border-gray-200 dark:border-gray-600 shadow-sm transition-colors duration-300">
+                v1.1
+            </div>
+
             <div class="w-12 h-12 flex items-center justify-center relative pointer-events-none">
                 <img id="logo-img" src="img/QuackUp.png" alt="QuackUp Logo" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <span class="text-3xl absolute hidden">🦆</span>
@@ -75,7 +81,7 @@
                     
                     <div class="flex-1 flex flex-col items-center justify-center">
                         <h2 id="calendar-month-year" class="text-lg font-bold text-gray-800 dark:text-white capitalize whitespace-nowrap"></h2>
-                        <button id="btn-go-today" class="text-[10px] uppercase font-bold tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full mt-1 active:bg-green-100 dark:active:bg-green-900/50 transition-colors touch-manipulation">
+                        <button id="btn-go-today" class="text-[10px] uppercase font-bold tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full mt-1 active:bg-green-100 dark:active:bg-green-900/50 transition-colors touch-manipulation z-10">
                             Hoje
                         </button>
                     </div>
@@ -207,7 +213,7 @@
                     <input type="text" id="new-cat-name" placeholder="Ex: Corrida" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900 transition-all text-gray-800 dark:text-white font-medium">
                 </div>
 
-                <!-- NOVO CAMPO: Unidade (Agora como Lista de Seleção) -->
+                <!-- CAMPO: Unidade (Lista Suspensa) -->
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Unidade de Medida</label>
                     <select id="new-cat-unit" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900 transition-all text-gray-800 dark:text-white font-medium">
@@ -297,7 +303,7 @@
 
     <script>
         // ==========================================
-        // CONFIGURAÇÕES, MODO ESCURO E ESTADOS
+        // REGISTO SERVICE WORKER (OFFLINE PWA)
         // ==========================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -307,6 +313,9 @@
             });
         }
 
+        // ==========================================
+        // CONFIGURAÇÕES E ESTADOS GLOBAIS
+        // ==========================================
         const state = {
             activeTab: 'home',
             activitiesData: {}, 
@@ -321,7 +330,7 @@
             pendingValueActivity: null
         };
 
-        // Categorias padrão originais (sem as de km predefinidas)
+        // Categorias base originais (sem unidade)
         const defaultCategories = [
             { id: 'cat_academia', label: 'Academia', icon: 'dumbbell', color: 'bg-blue-500', unit: '' },
             { id: 'cat_funcional', label: 'Funcional', icon: 'activity-square', color: 'bg-red-500', unit: '' },
@@ -382,11 +391,9 @@
 
         const loadData = () => {
             try {
-                // Carrega histórico de atividades
                 const savedData = localStorage.getItem('quackup_activities_data');
                 if (savedData) state.activitiesData = JSON.parse(savedData);
 
-                // Carrega categorias ou insere as padrão
                 const savedCategories = localStorage.getItem('quackup_categories');
                 if (savedCategories) {
                     state.categories = JSON.parse(savedCategories);
@@ -405,17 +412,21 @@
             } catch (error) { console.error(error); }
         };
 
-        // LÓGICA DE CLIQUE NA ATIVIDADE
+        // ==========================================
+        // LÓGICA DE CLIQUE NAS ATIVIDADES
+        // ==========================================
         const toggleActivity = (cat, dateStr) => {
             if(!state.activitiesData[dateStr]) state.activitiesData[dateStr] = {};
             
             const currentVal = state.activitiesData[dateStr][cat.id];
             
+            // Se já está ativo, desliga
             if (currentVal !== undefined && currentVal !== false) {
                 state.activitiesData[dateStr][cat.id] = false;
                 saveData();
                 updateAllUI();
             } else {
+                // Se vai ligar, verifica se tem unidade (ex: km) para pedir o valor
                 if (cat.unit && cat.unit.trim() !== '') {
                     openValueModal(cat, dateStr);
                 } else {
@@ -466,7 +477,9 @@
             document.getElementById('value-modal').classList.remove('flex');
         });
 
-        // Alertas customizados
+        // ==========================================
+        // ALERTAS CUSTOMIZADOS
+        // ==========================================
         const showCustomDialog = (title, message, type, onConfirm) => {
             const modal = document.getElementById('custom-alert-modal');
             document.getElementById('custom-alert-title').textContent = title;
@@ -494,6 +507,7 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             
+            // Re-criar botões para não duplicar eventos
             const newBtnOk = btnOk.cloneNode(true);
             btnOk.parentNode.replaceChild(newBtnOk, btnOk);
             const newBtnCancel = btnCancel.cloneNode(true);
@@ -513,7 +527,7 @@
         };
 
         // ==========================================
-        // ATUALIZAÇÃO DE INTERFACE
+        // RENDERIZAÇÃO DE INTERFACE
         // ==========================================
         const updateAllUI = () => {
             renderHome();
@@ -741,7 +755,9 @@
             lucide.createIcons();
         };
 
-        // LÓGICA DO MODAL DE ADICIONAR CATEGORIA
+        // ==========================================
+        // MODAL ADICIONAR/EDITAR CATEGORIA
+        // ==========================================
         const addModal = document.getElementById('add-category-modal');
         
         const renderAddCatForm = () => {
@@ -803,7 +819,7 @@
 
         document.getElementById('btn-save-category').addEventListener('click', () => {
             const name = document.getElementById('new-cat-name').value.trim();
-            const unit = document.getElementById('new-cat-unit').value.trim();
+            const unit = document.getElementById('new-cat-unit').value; // dropdown, sem trim
             
             if (!name) { showCustomDialog("Aviso", "Por favor, digite um nome para a categoria.", "alert"); return; }
             
@@ -823,7 +839,9 @@
             addModal.classList.add('hidden'); addModal.classList.remove('flex');
         });
 
+        // ==========================================
         // LÓGICA DO MODAL DE FILTRO
+        // ==========================================
         const renderFilterModal = () => {
             const container = document.getElementById('filter-options');
             container.innerHTML = '';
@@ -876,7 +894,9 @@
             modal.classList.add('hidden'); modal.classList.remove('flex');
         });
 
-        // NAVEGAÇÃO E EVENTOS
+        // ==========================================
+        // NAVEGAÇÃO E EVENTOS GERAIS
+        // ==========================================
         const navBtns = { home: document.getElementById('nav-home'), calendar: document.getElementById('nav-calendar'), settings: document.getElementById('nav-settings') };
         const tabs = { home: document.getElementById('tab-home'), calendar: document.getElementById('tab-calendar'), settings: document.getElementById('tab-settings') };
 
