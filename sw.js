@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quackup-cache-v3.0';
+const CACHE_NAME = 'quackup-cache-v3.1';
 
 // Ficheiros essenciais para guardar na memória do telemóvel
 const urlsToCache = [
