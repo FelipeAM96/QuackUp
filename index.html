@@ -3,23 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>QuackUp</title>
+    <title>QuackUp - Rotinas</title>
     
-    <!-- Link para o Manifesto PWA -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- Tailwind CSS com configuração para Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: {
-                extend: {}
-            }
+            theme: { extend: {} }
         }
     </script>
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
@@ -30,20 +23,20 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .prevent-select { -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+        
+        /* Estilo para toggle switch */
+        .toggle-checkbox:checked { right: 0; border-color: #22c55e; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #22c55e; }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 flex justify-center prevent-select transition-colors duration-300">
 
     <div class="w-full max-w-md bg-gray-50 dark:bg-gray-900 h-screen flex flex-col relative shadow-2xl overflow-hidden sm:rounded-3xl sm:h-[95vh] sm:my-auto sm:border-[8px] sm:border-gray-900 dark:sm:border-gray-700 transition-colors duration-300">
         
-        <!-- Header -->
         <header class="bg-white dark:bg-gray-800 pt-6 pb-4 px-4 shadow-sm flex items-center justify-center gap-3 z-20 shrink-0 transition-colors duration-300 relative">
-            
-            <!-- Versão no Cantinho -->
             <div class="absolute top-4 right-4 bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-300 text-[10px] font-bold px-2 py-1 rounded-lg pointer-events-none border border-gray-200 dark:border-gray-600 shadow-sm transition-colors duration-300">
-                v1.1
+                v3.0
             </div>
-
             <div class="w-12 h-12 flex items-center justify-center relative pointer-events-none">
                 <img id="logo-img" src="img/QuackUp.png" alt="QuackUp Logo" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <span class="text-3xl absolute hidden">🦆</span>
@@ -51,26 +44,26 @@
             <h1 class="text-2xl font-black text-gray-800 dark:text-white tracking-tight pointer-events-none">Quack<span class="text-green-500">Up</span></h1>
         </header>
 
-        <!-- Main Content -->
         <main class="flex-1 overflow-x-hidden relative bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
             
-            <!-- ABA 1: HOME -->
             <div id="tab-home" class="flex flex-col h-full px-4 py-6 overflow-y-auto no-scrollbar pb-28 fade-in">
-                <div class="text-center mb-8 pointer-events-none">
-                    <h2 class="text-gray-500 dark:text-gray-400 text-sm uppercase tracking-wider font-semibold">Hoje</h2>
+                <div class="text-center mb-6 pointer-events-none">
+                    <h2 class="text-gray-500 dark:text-gray-400 text-sm uppercase tracking-wider font-semibold">Sua Rotina de Hoje</h2>
                     <p id="today-date-display" class="text-2xl font-bold text-gray-800 dark:text-white"></p>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">O que treinou hoje?</p>
                 </div>
+                
                 <div id="home-buttons" class="grid grid-cols-1 gap-4 w-full max-w-sm mx-auto">
-                    <!-- Botões gerados via JS -->
-                </div>
+                    </div>
+                
                 <div id="empty-state-home" class="hidden text-center mt-10">
-                    <i data-lucide="folder-plus" class="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3"></i>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">Nenhuma categoria criada.<br>Vá em "Categorias" para adicionar.</p>
+                    <div class="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-green-500"></i>
+                    </div>
+                    <p class="text-gray-800 dark:text-white font-bold text-lg mb-1">Dia Livre!</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Nenhuma rotina agendada para hoje.</p>
                 </div>
             </div>
 
-            <!-- ABA 2: CALENDÁRIO & ESTATÍSTICAS -->
             <div id="tab-calendar" class="hidden flex-col h-full fade-in">
                 <div class="bg-white dark:bg-gray-800 px-4 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between shadow-sm rounded-b-xl z-10 shrink-0 relative transition-colors duration-300">
                     <div class="flex-1 flex justify-start">
@@ -78,14 +71,12 @@
                             <i data-lucide="chevron-left" class="pointer-events-none"></i>
                         </button>
                     </div>
-                    
                     <div class="flex-1 flex flex-col items-center justify-center">
                         <h2 id="calendar-month-year" class="text-lg font-bold text-gray-800 dark:text-white capitalize whitespace-nowrap"></h2>
                         <button id="btn-go-today" class="text-[10px] uppercase font-bold tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full mt-1 active:bg-green-100 dark:active:bg-green-900/50 transition-colors touch-manipulation z-10">
                             Hoje
                         </button>
                     </div>
-                    
                     <div class="flex-1 flex justify-end gap-1 z-10">
                         <button id="btn-open-filter" class="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors active:scale-95 touch-manipulation relative">
                             <i data-lucide="filter" class="pointer-events-none w-5 h-5"></i>
@@ -102,25 +93,11 @@
                         <div class="grid grid-cols-7 mb-2 text-center text-xs font-bold text-gray-400 dark:text-gray-500 uppercase pointer-events-none">
                             <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
                         </div>
-                        <div id="calendar-grid" class="grid grid-cols-7 gap-1">
-                            <!-- Dias gerados via JS -->
-                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
                     </div>
-
                     <div class="px-4 pb-6 mt-4">
-                        <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800/30 p-4 rounded-xl mb-5 flex items-center justify-between shadow-sm pointer-events-none transition-colors duration-300">
-                            <div>
-                                <p class="text-xs font-bold text-orange-800 dark:text-orange-400 uppercase tracking-wide">Contagem Decrescente</p>
-                                <p class="text-sm font-medium text-orange-600 dark:text-orange-300 mt-0.5">Faltam <strong id="days-left" class="text-lg"></strong> dias para o fim do ano!</p>
-                            </div>
-                            <i data-lucide="calendar" class="text-orange-400 dark:text-orange-500 opacity-80 w-8 h-8"></i>
-                        </div>
-
                         <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 px-1 pointer-events-none">Estatísticas Totais</h3>
-                        <div id="stats-grid" class="grid grid-cols-2 gap-3 mb-3 pointer-events-none">
-                            <!-- Estatísticas geradas via JS -->
-                        </div>
-
+                        <div id="stats-grid" class="grid grid-cols-2 gap-3 mb-3 pointer-events-none"></div>
                         <div class="bg-gray-800 dark:bg-gray-700 text-white p-5 rounded-xl shadow-md flex justify-between items-center pointer-events-none mt-3 transition-colors duration-300">
                             <div>
                                 <p id="total-label" class="text-sm font-semibold text-gray-300 dark:text-gray-400 uppercase tracking-wide">Total de Atividades</p>
@@ -132,33 +109,36 @@
                 </div>
             </div>
 
-            <!-- ABA 3: DEFINIÇÕES/CATEGORIAS -->
             <div id="tab-settings" class="hidden flex-col h-full px-4 py-6 overflow-y-auto no-scrollbar pb-28 fade-in">
                 <div class="flex justify-between items-center mb-6">
                     <div class="pointer-events-none">
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Categorias</h2>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Gira os seus treinos</p>
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Rotinas</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Gira os seus hábitos</p>
                     </div>
                     
-                    <!-- Botão Modo Escuro -->
                     <button id="btn-toggle-theme" class="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-sm text-gray-600 dark:text-yellow-400 active:scale-95 transition-all touch-manipulation">
                         <i data-lucide="moon" id="theme-icon-moon" class="w-5 h-5 pointer-events-none"></i>
                         <i data-lucide="sun" id="theme-icon-sun" class="w-5 h-5 hidden pointer-events-none"></i>
                     </button>
                 </div>
-                
-                <div id="categories-list" class="flex flex-col gap-3 mb-6">
-                    <!-- Lista de categorias via JS -->
-                </div>
 
-                <button id="btn-open-add-modal" class="w-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50 active:bg-green-300 font-bold py-4 rounded-xl transition-colors border border-green-200 dark:border-green-800 flex items-center justify-center gap-2 touch-manipulation">
+                <button id="btn-request-notif" class="hidden w-full mb-6 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 p-4 rounded-xl border border-blue-200 dark:border-blue-800 flex items-center justify-between transition-colors touch-manipulation">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="bell-ring" class="w-5 h-5"></i>
+                        <span class="text-sm font-bold">Ativar Lembretes no Telemóvel</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+                
+                <div id="categories-list" class="flex flex-col gap-3 mb-6"></div>
+
+                <button id="btn-open-add-modal" class="w-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50 active:bg-green-300 font-bold py-4 rounded-xl transition-colors border border-green-200 dark:border-green-800 flex items-center justify-center gap-2 touch-manipulation shadow-sm">
                     <i data-lucide="plus-circle" class="w-5 h-5 pointer-events-none"></i>
-                    <span class="pointer-events-none">Criar Nova Categoria</span>
+                    <span class="pointer-events-none">Criar Nova Rotina</span>
                 </button>
             </div>
         </main>
 
-        <!-- Bottom Navigation -->
         <nav class="absolute bottom-0 w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-around items-center pb-safe pt-2 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-20 shrink-0 transition-colors duration-300">
             <button id="nav-home" class="flex flex-col items-center p-3 w-20 rounded-xl transition-all text-green-600 dark:text-green-500 font-bold group touch-manipulation">
                 <div class="mb-1 transition-transform group-active:scale-95 scale-110 pointer-events-none">
@@ -176,135 +156,122 @@
                 <div class="mb-1 transition-transform group-active:scale-95 pointer-events-none">
                     <i data-lucide="layout-grid" class="stroke-2"></i>
                 </div>
-                <span class="text-[10px] uppercase tracking-wide pointer-events-none">Categorias</span>
+                <span class="text-[10px] uppercase tracking-wide pointer-events-none">Rotinas</span>
             </button>
         </nav>
 
-        <!-- Modal de Edição do Dia -->
-        <div id="edit-modal" class="hidden absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex-col justify-end fade-in">
-            <div class="bg-white dark:bg-gray-800 rounded-t-3xl p-6 pb-8 shadow-2xl slide-up transition-colors duration-300">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="pointer-events-none">
-                        <h3 class="text-xl font-bold text-gray-800 dark:text-white">Editar Dia</h3>
-                        <p id="modal-date-display" class="text-sm text-gray-500 dark:text-gray-400"></p>
-                    </div>
-                    <button id="btn-close-modal" class="p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full text-gray-600 dark:text-gray-300 transition-colors active:scale-95 touch-manipulation">
-                        <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
-                    </button>
-                </div>
-                <div id="modal-buttons" class="grid grid-cols-2 gap-3 mb-4 max-h-[50vh] overflow-y-auto no-scrollbar">
-                    <!-- Botões gerados via JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Adicionar/Editar Categoria -->
         <div id="add-category-modal" class="hidden absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex-col justify-end fade-in">
-            <div class="bg-white dark:bg-gray-800 rounded-t-3xl p-6 pb-8 shadow-2xl slide-up transition-colors duration-300">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 id="add-modal-title" class="text-xl font-bold text-gray-800 dark:text-white">Nova Categoria</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-t-3xl p-6 pb-8 shadow-2xl slide-up transition-colors duration-300 max-h-[90vh] overflow-y-auto no-scrollbar">
+                <div class="flex justify-between items-center mb-6 sticky top-0 bg-white dark:bg-gray-800 z-10 py-2">
+                    <h3 id="add-modal-title" class="text-xl font-bold text-gray-800 dark:text-white">Nova Rotina</h3>
                     <button id="btn-close-add-modal" class="p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full text-gray-600 dark:text-gray-300 transition-colors active:scale-95 touch-manipulation">
                         <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
                     </button>
                 </div>
                 
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nome da Atividade</label>
-                    <input type="text" id="new-cat-name" placeholder="Ex: Corrida" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900 transition-all text-gray-800 dark:text-white font-medium">
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">O que quer fazer?</label>
+                    <input type="text" id="new-cat-name" placeholder="Ex: Caminhada matinal" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900 transition-all text-gray-800 dark:text-white font-medium">
                 </div>
 
-                <!-- CAMPO: Unidade (Lista Suspensa) -->
-                <div class="mb-4">
+                <div class="mb-5 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> Agendamento
+                    </label>
+                    
+                    <div class="mb-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Dias da semana:</p>
+                        <div class="flex justify-between gap-1" id="days-selector">
+                            </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label class="text-xs text-gray-500 dark:text-gray-400 mb-1 block">Horário (Opcional)</label>
+                            <input type="time" id="new-cat-time" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 outline-none focus:border-green-500 text-gray-800 dark:text-white font-medium">
+                        </div>
+                        <div class="flex-1 flex flex-col justify-end">
+                            <label class="flex items-center cursor-pointer mb-2">
+                                <div class="relative">
+                                    <input type="checkbox" id="new-cat-reminder" class="sr-only toggle-checkbox">
+                                    <div class="block bg-gray-200 dark:bg-gray-600 w-10 h-6 rounded-full transition-colors toggle-label"></div>
+                                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform transform"></div>
+                                </div>
+                                <div class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Lembrete</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Unidade de Medida</label>
                     <select id="new-cat-unit" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900 transition-all text-gray-800 dark:text-white font-medium">
-                        <option value="">Sem unidade (Apenas Sim/Não)</option>
+                        <option value="">Apenas marcar como feito</option>
                         <option value="km">Quilômetros (km)</option>
                         <option value="m">Metros (m)</option>
                         <option value="h">Horas (h)</option>
                         <option value="min">Minutos (min)</option>
                     </select>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Selecione uma unidade para medir distância ou tempo.</p>
                 </div>
 
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Escolha um Ícone</label>
-                    <div id="icon-selector" class="grid grid-cols-6 gap-2">
-                        <!-- Gerado via JS -->
-                    </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Ícone e Cor</label>
+                    <div id="icon-selector" class="grid grid-cols-6 gap-2 mb-3"></div>
+                    <div id="color-selector" class="flex gap-2 overflow-x-auto no-scrollbar pb-2"></div>
                 </div>
 
-                <div class="mb-6">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Escolha uma Cor</label>
-                    <div id="color-selector" class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-                        <!-- Gerado via JS -->
-                    </div>
-                </div>
-
-                <button id="btn-save-category" class="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold py-4 rounded-xl active:scale-95 transition-all touch-manipulation shadow-md">
-                    Guardar Categoria
+                <button id="btn-save-category" class="w-full bg-green-500 text-white font-bold py-4 rounded-xl active:scale-95 transition-all touch-manipulation shadow-md mt-2">
+                    Guardar Rotina
                 </button>
             </div>
         </div>
 
-        <!-- Modal de Filtro -->
-        <div id="filter-modal" class="hidden absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex-col justify-end fade-in">
-            <div class="bg-white dark:bg-gray-800 rounded-t-3xl p-6 pb-8 shadow-2xl slide-up transition-colors duration-300">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-white">Filtrar Calendário</h3>
-                    <button id="btn-close-filter" class="p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full text-gray-600 dark:text-gray-300 transition-colors active:scale-95 touch-manipulation">
-                        <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
-                    </button>
-                </div>
-                
-                <div id="filter-options" class="flex flex-col gap-3 max-h-[60vh] overflow-y-auto no-scrollbar">
-                    <!-- Gerado via JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal para Digitar Valor (ex: KM) -->
         <div id="value-modal" class="hidden absolute inset-0 z-[60] bg-black/50 backdrop-blur-sm flex-col justify-center items-center fade-in px-4">
             <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-2xl w-full max-w-sm transform transition-all scale-100">
                 <div class="mb-4 text-center">
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-1" id="value-modal-title">Adicionar Valor</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm">Insira a quantidade</p>
                 </div>
-                
                 <div class="flex items-center justify-center gap-3 mb-6 bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600">
                     <input type="number" id="value-modal-input" step="0.01" inputmode="decimal" class="w-24 bg-transparent text-center text-3xl font-black text-gray-800 dark:text-white outline-none placeholder-gray-300 dark:placeholder-gray-500" placeholder="0">
-                    <span id="value-modal-unit" class="text-xl font-bold text-gray-500 dark:text-gray-400 uppercase">km</span>
+                    <span id="value-modal-unit" class="text-xl font-bold text-gray-500 dark:text-gray-400 uppercase"></span>
                 </div>
-
                 <div class="flex gap-3">
                     <button id="btn-value-cancel" class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation">Cancelar</button>
-                    <button id="btn-value-save" class="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation shadow-md shadow-green-200 dark:shadow-none">Guardar</button>
+                    <button id="btn-value-save" class="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation shadow-md">Guardar</button>
                 </div>
             </div>
         </div>
 
-        <!-- Modal de Confirmação e Alerta -->
         <div id="custom-alert-modal" class="hidden absolute inset-0 z-[70] bg-black/50 backdrop-blur-sm flex-col justify-center items-center fade-in px-4">
-            <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-2xl w-full max-w-sm transform transition-all scale-100">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-2xl w-full max-w-sm">
                 <div class="text-center mb-6">
-                    <div id="custom-alert-icon" class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="alert-triangle" class="text-red-500 w-8 h-8"></i>
-                    </div>
-                    <h3 id="custom-alert-title" class="text-xl font-bold text-gray-800 dark:text-white mb-2">Atenção</h3>
-                    <p id="custom-alert-message" class="text-gray-500 dark:text-gray-400">Tem a certeza?</p>
+                    <div id="custom-alert-icon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"></div>
+                    <h3 id="custom-alert-title" class="text-xl font-bold text-gray-800 dark:text-white mb-2"></h3>
+                    <p id="custom-alert-message" class="text-gray-500 dark:text-gray-400"></p>
                 </div>
                 <div id="custom-alert-buttons" class="flex gap-3">
                     <button id="btn-alert-cancel" class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation">Cancelar</button>
-                    <button id="btn-alert-ok" class="flex-1 bg-red-500 text-white font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation">Confirmar</button>
+                    <button id="btn-alert-ok" class="flex-1 text-white font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation">OK</button>
                 </div>
+            </div>
+        </div>
+        
+        <div id="filter-modal" class="hidden absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex-col justify-end fade-in">
+            <div class="bg-white dark:bg-gray-800 rounded-t-3xl p-6 pb-8 shadow-2xl slide-up max-h-[60vh] overflow-y-auto no-scrollbar">
+                <div class="flex justify-between items-center mb-6 sticky top-0 bg-white dark:bg-gray-800 z-10 py-2">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white">Filtrar Calendário</h3>
+                    <button id="btn-close-filter" class="p-2 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300 transition-colors active:scale-95 touch-manipulation">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div id="filter-options" class="flex flex-col gap-3"></div>
             </div>
         </div>
 
     </div>
 
     <script>
-        // ==========================================
-        // REGISTO SERVICE WORKER (OFFLINE PWA)
-        // ==========================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
@@ -313,232 +280,210 @@
             });
         }
 
-        // ==========================================
-        // CONFIGURAÇÕES E ESTADOS GLOBAIS
-        // ==========================================
         const state = {
             activeTab: 'home',
             activitiesData: {}, 
             categories: [],
             currentDate: new Date(),
-            selectedEditDate: null,
             newCatIcon: 'activity',
             newCatColor: 'bg-blue-500',
+            newCatDays: [1,2,3,4,5], // Por defeito: Seg a Sex
             editingCategoryId: null,
             activeFilter: null,
             darkMode: false,
             pendingValueActivity: null
         };
 
-        // Categorias base originais (sem unidade)
         const defaultCategories = [
-            { id: 'cat_academia', label: 'Academia', icon: 'dumbbell', color: 'bg-blue-500', unit: '' },
-            { id: 'cat_funcional', label: 'Funcional', icon: 'activity-square', color: 'bg-red-500', unit: '' },
-            { id: 'cat_pilates', label: 'Pilates', icon: 'flower-2', color: 'bg-green-500', unit: '' },
-            { id: 'cat_futebol', label: 'Futebol', icon: 'goal', color: 'bg-yellow-400', unit: '' }
+            { id: 'cat_academia', label: 'Academia', icon: 'dumbbell', color: 'bg-blue-500', unit: '', time: '', days: [1,2,3,4,5,6], reminder: false },
+            { id: 'cat_agua', label: 'Beber 2L Água', icon: 'waves', color: 'bg-teal-500', unit: '', time: '', days: [0,1,2,3,4,5,6], reminder: false }
         ];
 
-        const availableIcons = ['activity', 'activity-square', 'dumbbell', 'flower-2', 'goal', 'bike', 'waves', 'zap', 'heart', 'flame', 'crosshair', 'person-standing', 'trophy', 'pencil'];
+        const daysOfWeek = [
+            { id: 0, letter: 'D', name: 'Domingo' },
+            { id: 1, letter: 'S', name: 'Segunda' },
+            { id: 2, letter: 'T', name: 'Terça' },
+            { id: 3, letter: 'Q', name: 'Quarta' },
+            { id: 4, letter: 'Q', name: 'Quinta' },
+            { id: 5, letter: 'S', name: 'Sexta' },
+            { id: 6, letter: 'S', name: 'Sábado' }
+        ];
+
+        const availableIcons = ['activity', 'check-square', 'dumbbell', 'flower-2', 'goal', 'bike', 'waves', 'zap', 'heart', 'coffee', 'book', 'moon', 'sun', 'pencil'];
         const availableColors = ['bg-blue-500', 'bg-red-500', 'bg-green-500', 'bg-yellow-400', 'bg-purple-500', 'bg-pink-500', 'bg-orange-500', 'bg-teal-500', 'bg-gray-800'];
 
         lucide.createIcons();
 
-        // INICIALIZAR MODO ESCURO
+        // TEMA ESCURO
         const initTheme = () => {
             const savedTheme = localStorage.getItem('quackup_darkmode');
             if (savedTheme === 'true' || (savedTheme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                state.darkMode = true;
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon-moon').classList.add('hidden');
-                document.getElementById('theme-icon-sun').classList.remove('hidden');
-            } else {
-                state.darkMode = false;
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon-moon').classList.remove('hidden');
-                document.getElementById('theme-icon-sun').classList.add('hidden');
+                state.darkMode = true; document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon-moon').classList.add('hidden'); document.getElementById('theme-icon-sun').classList.remove('hidden');
             }
         };
         initTheme();
-
         document.getElementById('btn-toggle-theme').addEventListener('click', () => {
             state.darkMode = !state.darkMode;
-            if(state.darkMode) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon-moon').classList.add('hidden');
-                document.getElementById('theme-icon-sun').classList.remove('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon-moon').classList.remove('hidden');
-                document.getElementById('theme-icon-sun').classList.add('hidden');
-            }
+            document.documentElement.classList.toggle('dark', state.darkMode);
+            document.getElementById('theme-icon-moon').classList.toggle('hidden', state.darkMode);
+            document.getElementById('theme-icon-sun').classList.toggle('hidden', !state.darkMode);
             localStorage.setItem('quackup_darkmode', state.darkMode);
         });
 
-        // ==========================================
-        // UTILITÁRIOS E DADOS
-        // ==========================================
-        const getLocalYYYYMMDD = (date) => {
-            const yyyy = date.getFullYear();
-            const mm = String(date.getMonth() + 1).padStart(2, '0');
-            const dd = String(date.getDate()).padStart(2, '0');
-            return `${yyyy}-${mm}-${dd}`;
-        };
-        const getMonthName = (monthIndex) => {
-            const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-            return months[monthIndex];
-        };
+        // UTILITÁRIOS
+        const getLocalYYYYMMDD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const getMonthName = (m) => ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][m];
         const todayStr = getLocalYYYYMMDD(new Date());
 
         const loadData = () => {
             try {
-                const savedData = localStorage.getItem('quackup_activities_data');
-                if (savedData) state.activitiesData = JSON.parse(savedData);
-
-                const savedCategories = localStorage.getItem('quackup_categories');
-                if (savedCategories) {
-                    state.categories = JSON.parse(savedCategories);
+                const sData = localStorage.getItem('quackup_activities_data');
+                if (sData) state.activitiesData = JSON.parse(sData);
+                
+                const sCat = localStorage.getItem('quackup_categories');
+                if (sCat) {
+                    let parsed = JSON.parse(sCat);
+                    // Atualiza categorias antigas que não tenham os novos campos (time, days, reminder)
+                    parsed = parsed.map(c => ({
+                        ...c,
+                        time: c.time || '',
+                        days: c.days || [0,1,2,3,4,5,6], // Se for antigo, assume todos os dias
+                        reminder: c.reminder || false
+                    }));
+                    state.categories = parsed;
                 } else {
                     state.categories = [...defaultCategories];
-                    localStorage.setItem('quackup_categories', JSON.stringify(state.categories));
+                    saveData();
                 }
-            } catch (error) { console.error(error); }
+            } catch(e){}
             updateAllUI();
+            checkNotificationPermission();
         };
 
         const saveData = () => {
-            try {
-                localStorage.setItem('quackup_activities_data', JSON.stringify(state.activitiesData));
-                localStorage.setItem('quackup_categories', JSON.stringify(state.categories));
-            } catch (error) { console.error(error); }
+            localStorage.setItem('quackup_activities_data', JSON.stringify(state.activitiesData));
+            localStorage.setItem('quackup_categories', JSON.stringify(state.categories));
         };
 
-        // ==========================================
-        // LÓGICA DE CLIQUE NAS ATIVIDADES
-        // ==========================================
+        // NOTIFICAÇÕES (LEMBRETES)
+        const checkNotificationPermission = () => {
+            const btn = document.getElementById('btn-request-notif');
+            if (!("Notification" in window)) return;
+            if (Notification.permission === "default") {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        };
+
+        document.getElementById('btn-request-notif').addEventListener('click', () => {
+            Notification.requestPermission().then(perm => {
+                if(perm === "granted") checkNotificationPermission();
+            });
+        });
+
+        // Verifica os lembretes a cada minuto (Apenas funciona enquanto a app estiver aberta/fundo no browser)
+        setInterval(() => {
+            if (Notification.permission !== "granted") return;
+            const now = new Date();
+            const currentDay = now.getDay();
+            const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            state.categories.forEach(cat => {
+                if (cat.reminder && cat.time === currentTime && cat.days.includes(currentDay)) {
+                    // Impede de spammar a notificação no mesmo minuto
+                    const notifId = `notif_${cat.id}_${todayStr}_${currentTime}`;
+                    if (!localStorage.getItem(notifId)) {
+                        new Notification("QuackUp", { body: `Está na hora de: ${cat.label}`, icon: 'img/QuackUp.png' });
+                        localStorage.setItem(notifId, 'true');
+                    }
+                }
+            });
+        }, 60000);
+
+        // CLIQUE NAS ATIVIDADES
         const toggleActivity = (cat, dateStr) => {
             if(!state.activitiesData[dateStr]) state.activitiesData[dateStr] = {};
-            
             const currentVal = state.activitiesData[dateStr][cat.id];
             
-            // Se já está ativo, desliga
             if (currentVal !== undefined && currentVal !== false) {
                 state.activitiesData[dateStr][cat.id] = false;
-                saveData();
-                updateAllUI();
+                saveData(); updateAllUI();
             } else {
-                // Se vai ligar, verifica se tem unidade (ex: km) para pedir o valor
                 if (cat.unit && cat.unit.trim() !== '') {
-                    openValueModal(cat, dateStr);
+                    state.pendingValueActivity = { catId: cat.id, dateStr: dateStr };
+                    document.getElementById('value-modal-title').textContent = cat.label;
+                    document.getElementById('value-modal-unit').textContent = cat.unit;
+                    document.getElementById('value-modal-input').value = '';
+                    document.getElementById('value-modal').classList.remove('hidden');
+                    document.getElementById('value-modal').classList.add('flex');
+                    setTimeout(() => document.getElementById('value-modal-input').focus(), 100);
                 } else {
                     state.activitiesData[dateStr][cat.id] = true;
-                    saveData();
-                    updateAllUI();
+                    saveData(); updateAllUI();
                 }
             }
         };
 
-        const openValueModal = (cat, dateStr) => {
-            state.pendingValueActivity = { catId: cat.id, dateStr: dateStr };
-            document.getElementById('value-modal-title').textContent = cat.label;
-            document.getElementById('value-modal-unit').textContent = cat.unit;
-            document.getElementById('value-modal-input').value = '';
-            
-            const modal = document.getElementById('value-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => document.getElementById('value-modal-input').focus(), 100);
-        };
-
         document.getElementById('btn-value-cancel').addEventListener('click', () => {
-            state.pendingValueActivity = null;
-            document.getElementById('value-modal').classList.add('hidden');
-            document.getElementById('value-modal').classList.remove('flex');
+            document.getElementById('value-modal').classList.add('hidden'); document.getElementById('value-modal').classList.remove('flex');
         });
-
         document.getElementById('btn-value-save').addEventListener('click', () => {
-            let val = document.getElementById('value-modal-input').value;
-            val = val.replace(',', '.');
-            
-            if(!val || isNaN(val)) {
-                val = true; 
-            } else {
-                val = parseFloat(val);
-            }
-
+            let val = document.getElementById('value-modal-input').value.replace(',', '.');
+            val = (!val || isNaN(val)) ? true : parseFloat(val);
             const { catId, dateStr } = state.pendingValueActivity;
-            if(!state.activitiesData[dateStr]) state.activitiesData[dateStr] = {};
             state.activitiesData[dateStr][catId] = val;
-            
-            saveData();
-            updateAllUI();
-            
-            state.pendingValueActivity = null;
-            document.getElementById('value-modal').classList.add('hidden');
-            document.getElementById('value-modal').classList.remove('flex');
+            saveData(); updateAllUI();
+            document.getElementById('value-modal').classList.add('hidden'); document.getElementById('value-modal').classList.remove('flex');
         });
 
-        // ==========================================
         // ALERTAS CUSTOMIZADOS
-        // ==========================================
         const showCustomDialog = (title, message, type, onConfirm) => {
             const modal = document.getElementById('custom-alert-modal');
             document.getElementById('custom-alert-title').textContent = title;
             document.getElementById('custom-alert-message').textContent = message;
-            
             const btnCancel = document.getElementById('btn-alert-cancel');
             const btnOk = document.getElementById('btn-alert-ok');
             const iconWrapper = document.getElementById('custom-alert-icon');
             
             if (type === 'alert') {
                 btnCancel.classList.add('hidden');
-                btnOk.textContent = 'OK';
-                btnOk.className = 'flex-1 bg-blue-500 text-white font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation';
+                btnOk.className = 'flex-1 bg-blue-500 text-white font-bold py-3 rounded-xl active:scale-95';
                 iconWrapper.className = 'w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4';
                 iconWrapper.innerHTML = '<i data-lucide="info" class="text-blue-500 w-8 h-8"></i>';
             } else {
                 btnCancel.classList.remove('hidden');
-                btnOk.textContent = 'Apagar';
-                btnOk.className = 'flex-1 bg-red-500 text-white font-bold py-3 rounded-xl active:scale-95 transition-all touch-manipulation';
+                btnOk.className = 'flex-1 bg-red-500 text-white font-bold py-3 rounded-xl active:scale-95';
                 iconWrapper.className = 'w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4';
                 iconWrapper.innerHTML = '<i data-lucide="trash-2" class="text-red-500 w-8 h-8"></i>';
             }
             lucide.createIcons();
+            modal.classList.remove('hidden'); modal.classList.add('flex');
             
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            // Re-criar botões para não duplicar eventos
-            const newBtnOk = btnOk.cloneNode(true);
-            btnOk.parentNode.replaceChild(newBtnOk, btnOk);
-            const newBtnCancel = btnCancel.cloneNode(true);
-            btnCancel.parentNode.replaceChild(newBtnCancel, btnCancel);
+            const newBtnOk = btnOk.cloneNode(true); btnOk.parentNode.replaceChild(newBtnOk, btnOk);
+            const newBtnCancel = btnCancel.cloneNode(true); btnCancel.parentNode.replaceChild(newBtnCancel, btnCancel);
             
             newBtnCancel.addEventListener('click', () => { modal.classList.add('hidden'); modal.classList.remove('flex'); });
             newBtnOk.addEventListener('click', () => { modal.classList.add('hidden'); modal.classList.remove('flex'); if (onConfirm) onConfirm(); });
         };
 
         window.deleteCategory = (id) => {
-            showCustomDialog("Apagar Categoria", "Tem certeza? O histórico não será perdido nos dados base.", "confirm", () => {
+            showCustomDialog("Apagar Rotina", "Tem certeza? O histórico nas estatísticas manterá os dados antigos.", "confirm", () => {
                 state.categories = state.categories.filter(c => c.id !== id);
                 if (state.activeFilter === id) state.activeFilter = null;
-                saveData();
-                updateAllUI();
+                saveData(); updateAllUI();
             });
         };
 
-        // ==========================================
-        // RENDERIZAÇÃO DE INTERFACE
-        // ==========================================
+        // RENDERIZAÇÃO
         const updateAllUI = () => {
-            renderHome();
-            renderCalendar();
-            renderStats();
-            renderCategoriesList();
-            if (state.selectedEditDate) renderModal();
+            renderHome(); renderCalendar(); renderStats(); renderCategoriesList();
         };
 
         const renderHome = () => {
             const todayDateObj = new Date();
+            const currentDayOfWeek = todayDateObj.getDay();
             document.getElementById('today-date-display').textContent = `${todayDateObj.getDate()} de ${getMonthName(todayDateObj.getMonth())}, ${todayDateObj.getFullYear()}`;
             
             const todayData = state.activitiesData[todayStr] || {};
@@ -546,35 +491,46 @@
             const emptyState = document.getElementById('empty-state-home');
             container.innerHTML = '';
 
-            if (state.categories.length === 0) {
+            // FILTRA APENAS AS ROTINAS AGENDADAS PARA O DIA DE HOJE
+            const scheduledToday = state.categories.filter(cat => cat.days.includes(currentDayOfWeek));
+            
+            // Ordena pelo horário
+            scheduledToday.sort((a,b) => (a.time || '23:59').localeCompare(b.time || '23:59'));
+
+            if (scheduledToday.length === 0) {
                 emptyState.classList.remove('hidden'); return;
             }
             emptyState.classList.add('hidden');
 
-            state.categories.forEach(cat => {
+            scheduledToday.forEach(cat => {
                 const actValue = todayData[cat.id];
                 const isActive = actValue !== undefined && actValue !== false;
                 
                 let valDisplay = '';
-                if (isActive && cat.unit && typeof actValue === 'number') {
-                    valDisplay = `<span class="block text-sm font-normal opacity-90">${actValue} ${cat.unit}</span>`;
-                }
+                if (isActive && cat.unit && typeof actValue === 'number') valDisplay = `<span class="block text-sm font-normal opacity-90">${actValue} ${cat.unit}</span>`;
+                
+                let timeHtml = cat.time ? `<div class="text-xs font-bold px-2 py-1 rounded mb-1 w-max ${isActive ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-500'}"><i data-lucide="clock" class="inline w-3 h-3 mr-1"></i>${cat.time}</div>` : '';
 
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = `w-full flex items-center p-5 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border cursor-pointer select-none touch-manipulation ${isActive ? 'bg-green-500 text-white shadow-green-200 dark:shadow-none border-green-500' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-100 dark:border-gray-700'}`;
+                btn.className = `w-full flex items-center p-5 rounded-2xl transition-all shadow-sm active:scale-95 border select-none text-left ${isActive ? 'bg-green-500 text-white border-green-500' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 border-gray-100 dark:border-gray-700'}`;
                 
                 btn.innerHTML = `
                     <div class="pointer-events-none p-3 rounded-full mr-4 flex items-center justify-center ${isActive ? 'bg-green-400' : 'bg-gray-100 dark:bg-gray-700'}">
                         <i data-lucide="${cat.icon}" class="w-7 h-7 ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}"></i>
                     </div>
-                    <div class="pointer-events-none text-left">
+                    <div class="pointer-events-none w-full">
+                        ${timeHtml}
                         <span class="text-xl font-bold block leading-tight">${cat.label}</span>
                         ${valDisplay}
                     </div>
+                    <div class="pointer-events-none ml-auto">
+                        <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center ${isActive ? 'border-white bg-white' : 'border-gray-300 dark:border-gray-600'}">
+                            ${isActive ? '<i data-lucide="check" class="w-4 h-4 text-green-500"></i>' : ''}
+                        </div>
+                    </div>
                 `;
-                
-                btn.addEventListener('click', (e) => { e.preventDefault(); toggleActivity(cat, todayStr); });
+                btn.addEventListener('click', () => toggleActivity(cat, todayStr));
                 container.appendChild(btn);
             });
             lucide.createIcons();
@@ -587,15 +543,10 @@
 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const firstDayIndex = new Date(year, month, 1).getDay();
-
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
 
-            for (let i = 0; i < firstDayIndex; i++) {
-                const emptyDiv = document.createElement('div');
-                emptyDiv.className = 'h-14';
-                grid.appendChild(emptyDiv);
-            }
+            for (let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement('div'));
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -603,13 +554,11 @@
                 const isToday = dateStr === todayStr;
 
                 const dayDiv = document.createElement('div');
-                dayDiv.className = `h-14 flex flex-col items-center justify-start p-1 rounded-lg border cursor-pointer select-none active:scale-95 transition-all touch-manipulation ${isToday ? 'border-gray-400 dark:border-gray-500 bg-gray-50 dark:bg-gray-700' : 'border-transparent hover:bg-gray-100 dark:hover:bg-gray-800'}`;
-                dayDiv.addEventListener('click', (e) => { e.preventDefault(); state.selectedEditDate = dateStr; renderModal(); });
-
+                dayDiv.className = `h-14 flex flex-col items-center justify-start p-1 rounded-lg border select-none ${isToday ? 'border-gray-400 dark:border-gray-500 bg-gray-50 dark:bg-gray-700' : 'border-transparent'}`;
+                
                 let dotsHTML = '';
                 state.categories.forEach(cat => {
-                    const actValue = dayData[cat.id];
-                    if (actValue !== undefined && actValue !== false) {
+                    if (dayData[cat.id] !== undefined && dayData[cat.id] !== false) {
                         if (state.activeFilter === null || state.activeFilter === cat.id) {
                             dotsHTML += `<div class="pointer-events-none w-2 h-2 rounded-full ${cat.color} shadow-sm mx-[1px]"></div>`;
                         }
@@ -618,7 +567,7 @@
 
                 dayDiv.innerHTML = `
                     <span class="pointer-events-none text-sm font-semibold ${isToday ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400'}">${day}</span>
-                    <div class="pointer-events-none flex flex-wrap justify-center items-center mt-1 w-full px-1">${dotsHTML}</div>
+                    <div class="pointer-events-none flex flex-wrap justify-center mt-1 w-full">${dotsHTML}</div>
                 `;
                 grid.appendChild(dayDiv);
             }
@@ -626,15 +575,11 @@
 
         const renderStats = () => {
             const statsGrid = document.getElementById('stats-grid');
-            statsGrid.innerHTML = '';
-            let totalGeneral = 0;
+            statsGrid.innerHTML = ''; let totalGeneral = 0;
 
             state.categories.forEach(cat => {
                 if (state.activeFilter !== null && state.activeFilter !== cat.id) return;
-
-                let count = 0;
-                let totalUnitSum = 0;
-                
+                let count = 0, totalUnitSum = 0;
                 Object.values(state.activitiesData).forEach(day => {
                     const actValue = day[cat.id];
                     if (actValue !== undefined && actValue !== false) {
@@ -644,14 +589,13 @@
                 });
                 totalGeneral += count;
 
-                let unitHtml = '';
-                if (cat.unit && totalUnitSum > 0) {
-                    let displaySum = totalUnitSum % 1 === 0 ? totalUnitSum : totalUnitSum.toFixed(1);
-                    unitHtml = `<p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">${displaySum} ${cat.unit} totais</p>`;
-                }
+                let unitHtml = (cat.unit && totalUnitSum > 0) ? `<p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">${totalUnitSum%1===0?totalUnitSum:totalUnitSum.toFixed(1)} ${cat.unit} totais</p>` : '';
+                
+                // Mostrar dias da semana agendados na UI das stats (Opcional, mas util)
+                let daysText = cat.days.length === 7 ? 'Todos os dias' : cat.days.map(d=>daysOfWeek.find(w=>w.id===d).short).join(',');
 
                 const statDiv = document.createElement('div');
-                statDiv.className = "bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-50 dark:border-gray-700 flex items-center gap-3 transition-colors duration-300";
+                statDiv.className = "bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-50 dark:border-gray-700 flex items-center gap-3";
                 statDiv.innerHTML = `
                     <div class="w-4 h-4 rounded-full ${cat.color} shrink-0"></div>
                     <div class="overflow-hidden">
@@ -664,45 +608,30 @@
             });
 
             document.getElementById('stat-total').textContent = totalGeneral;
-            const totalLabel = document.getElementById('total-label');
-            if (totalLabel) totalLabel.textContent = state.activeFilter ? "Total (Filtrado)" : "Total de Atividades";
-
-            const filterIndicator = document.getElementById('filter-indicator');
-            if (filterIndicator) {
-                if (state.activeFilter) filterIndicator.classList.remove('hidden');
-                else filterIndicator.classList.add('hidden');
-            }
-
-            const today = new Date();
-            const endOfYear = new Date(today.getFullYear(), 11, 31);
-            const daysLeft = Math.ceil(Math.abs(endOfYear - today) / (1000 * 60 * 60 * 24));
-            document.getElementById('days-left').textContent = daysLeft;
+            document.getElementById('total-label').textContent = state.activeFilter ? "Total (Filtrado)" : "Total de Atividades";
+            document.getElementById('filter-indicator').classList.toggle('hidden', !state.activeFilter);
         };
 
         const renderCategoriesList = () => {
             const list = document.getElementById('categories-list');
             list.innerHTML = '';
-
             state.categories.forEach(cat => {
-                const unitBadge = cat.unit ? `<span class="text-[10px] bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-gray-500 dark:text-gray-300 font-bold uppercase ml-2 border border-gray-200 dark:border-gray-600">${cat.unit}</span>` : '';
+                let timeStr = cat.time ? `<span class="text-[10px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 px-2 rounded ml-2">${cat.time}</span>` : '';
+                let daysStr = cat.days.length === 7 ? 'Diário' : cat.days.map(d=>daysOfWeek.find(w=>w.id===d).short).join('-');
+                
                 const item = document.createElement('div');
-                item.className = "bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex justify-between items-center transition-colors duration-300";
+                item.className = "bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex justify-between items-center";
                 item.innerHTML = `
-                    <div class="flex items-center gap-3 pointer-events-none">
-                        <div class="${cat.color} text-white p-2 rounded-full">
-                            <i data-lucide="${cat.icon}" class="w-5 h-5"></i>
-                        </div>
+                    <div class="flex items-center gap-3">
+                        <div class="${cat.color} text-white p-2 rounded-full"><i data-lucide="${cat.icon}" class="w-5 h-5"></i></div>
                         <div class="flex flex-col">
-                           <span class="font-bold text-gray-800 dark:text-white flex items-center">${cat.label} ${unitBadge}</span>
+                           <span class="font-bold text-gray-800 dark:text-white flex items-center">${cat.label} ${timeStr}</span>
+                           <span class="text-[10px] text-gray-500 dark:text-gray-400 flex items-center gap-1"><i data-lucide="calendar-days" class="w-3 h-3"></i> ${daysStr} ${cat.reminder ? '• 🔔 Ativo' : ''}</span>
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <button class="btn-edit-cat p-2 text-gray-400 dark:text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-gray-600 rounded-full transition-colors touch-manipulation">
-                            <i data-lucide="pencil" class="w-5 h-5 pointer-events-none"></i>
-                        </button>
-                        <button class="btn-delete-cat p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-gray-600 rounded-full transition-colors touch-manipulation">
-                            <i data-lucide="trash-2" class="w-5 h-5 pointer-events-none"></i>
-                        </button>
+                        <button class="btn-edit-cat p-2 text-gray-400 hover:text-blue-500 bg-gray-50 dark:bg-gray-700 rounded-full"><i data-lucide="pencil" class="w-5 h-5"></i></button>
+                        <button class="btn-delete-cat p-2 text-gray-400 hover:text-red-500 bg-gray-50 dark:bg-gray-700 rounded-full"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
                     </div>
                 `;
                 item.querySelector('.btn-edit-cat').addEventListener('click', () => openEditCategoryModal(cat.id));
@@ -712,226 +641,146 @@
             lucide.createIcons();
         };
 
-        const renderModal = () => {
-            const modal = document.getElementById('edit-modal');
-            if (!state.selectedEditDate) { modal.classList.add('hidden'); modal.classList.remove('flex'); return; }
-
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-
-            const [y, m, d] = state.selectedEditDate.split('-');
-            const dateObj = new Date(y, m - 1, d);
-            document.getElementById('modal-date-display').textContent = `${dateObj.getDate()} de ${getMonthName(dateObj.getMonth())}, ${dateObj.getFullYear()}`;
-
-            const dayData = state.activitiesData[state.selectedEditDate] || {};
-            const container = document.getElementById('modal-buttons');
-            container.innerHTML = '';
-
-            if(state.categories.length === 0) {
-                container.innerHTML = '<p class="col-span-2 text-center text-sm text-gray-500 dark:text-gray-400">Nenhuma categoria encontrada.</p>';
-            }
-
-            state.categories.forEach(cat => {
-                const actValue = dayData[cat.id];
-                const isActive = actValue !== undefined && actValue !== false;
-                
-                let valDisplay = '';
-                if (isActive && cat.unit && typeof actValue === 'number') {
-                    valDisplay = `<span class="block text-xs font-normal opacity-90">${actValue} ${cat.unit}</span>`;
-                }
-
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 border cursor-pointer select-none touch-manipulation ${isActive ? 'bg-green-500 text-white shadow-green-200 dark:shadow-none border-green-500' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600'}`;
-                
-                btn.innerHTML = `
-                    <i data-lucide="${cat.icon}" class="pointer-events-none w-7 h-7 mb-2 ${isActive ? 'text-white' : 'text-gray-400 dark:text-gray-400'}"></i>
-                    <span class="pointer-events-none text-sm font-bold truncate w-full px-1">${cat.label}</span>
-                    ${valDisplay}
-                `;
-                
-                btn.addEventListener('click', (e) => { e.preventDefault(); toggleActivity(cat, state.selectedEditDate); });
-                container.appendChild(btn);
-            });
-            lucide.createIcons();
-        };
-
-        // ==========================================
-        // MODAL ADICIONAR/EDITAR CATEGORIA
-        // ==========================================
-        const addModal = document.getElementById('add-category-modal');
-        
+        // MODAL ADICIONAR/EDITAR
         const renderAddCatForm = () => {
-            const iconContainer = document.getElementById('icon-selector');
-            const colorContainer = document.getElementById('color-selector');
+            document.getElementById('icon-selector').innerHTML = availableIcons.map(i => `
+                <button type="button" class="p-3 rounded-xl border flex justify-center items-center active:scale-95 ${state.newCatIcon === i ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-600' : 'border-gray-200 dark:border-gray-600 text-gray-400'}" onclick="state.newCatIcon='${i}'; renderAddCatForm();"><i data-lucide="${i}"></i></button>
+            `).join('');
+
+            document.getElementById('color-selector').innerHTML = availableColors.map(c => `
+                <button type="button" class="w-10 h-10 rounded-full shrink-0 flex justify-center items-center active:scale-95 ${c} ${state.newCatColor === c ? 'ring-4 ring-offset-2 ring-green-400 dark:ring-offset-gray-800' : 'ring-0'}" onclick="state.newCatColor='${c}'; renderAddCatForm();">
+                    ${state.newCatColor === c ? '<i data-lucide="check" class="text-white w-5 h-5"></i>' : ''}
+                </button>
+            `).join('');
             
-            iconContainer.innerHTML = availableIcons.map(icon => `
-                <button type="button" class="p-3 rounded-xl border flex justify-center items-center active:scale-95 transition-all touch-manipulation ${state.newCatIcon === icon ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'border-gray-200 dark:border-gray-600 text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700'}" onclick="selectNewIcon('${icon}')">
-                    <i data-lucide="${icon}" class="pointer-events-none"></i>
-                </button>
-            `).join('');
+            // Selector de Dias
+            document.getElementById('days-selector').innerHTML = daysOfWeek.map(d => {
+                const isActive = state.newCatDays.includes(d.id);
+                return `<button type="button" class="w-9 h-9 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900 shadow-md' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-500'}" onclick="toggleNewCatDay(${d.id})">${d.letter}</button>`;
+            }).join('');
 
-            colorContainer.innerHTML = availableColors.map(color => `
-                <button type="button" class="w-10 h-10 rounded-full shrink-0 flex justify-center items-center active:scale-95 transition-all touch-manipulation ${color} ${state.newCatColor === color ? 'ring-4 ring-offset-2 ring-green-400 dark:ring-offset-gray-800' : 'ring-0'}" onclick="selectNewColor('${color}')">
-                    ${state.newCatColor === color ? '<i data-lucide="check" class="text-white w-5 h-5 pointer-events-none"></i>' : ''}
-                </button>
-            `).join('');
-
+            // Toggle Visual do Checkbox
+            document.getElementById('new-cat-reminder').checked = state.newCatReminder;
+            
             lucide.createIcons();
         };
 
-        window.selectNewIcon = (icon) => { state.newCatIcon = icon; renderAddCatForm(); };
-        window.selectNewColor = (color) => { state.newCatColor = color; renderAddCatForm(); };
+        window.toggleNewCatDay = (id) => {
+            if (state.newCatDays.includes(id)) {
+                // Não deixa desmarcar todos (deve ter pelo menos 1 dia)
+                if (state.newCatDays.length > 1) state.newCatDays = state.newCatDays.filter(d => d !== id);
+            } else {
+                state.newCatDays.push(id);
+            }
+            renderAddCatForm();
+        };
+
+        document.getElementById('new-cat-reminder').addEventListener('change', (e) => {
+            state.newCatReminder = e.target.checked;
+        });
 
         window.openEditCategoryModal = (id) => {
             const cat = state.categories.find(c => c.id === id);
             if (!cat) return;
-
             state.editingCategoryId = id;
             state.newCatIcon = cat.icon;
             state.newCatColor = cat.color;
+            state.newCatDays = [...cat.days];
+            state.newCatReminder = cat.reminder;
             document.getElementById('new-cat-name').value = cat.label;
             document.getElementById('new-cat-unit').value = cat.unit || '';
+            document.getElementById('new-cat-time').value = cat.time || '';
             
-            document.getElementById('add-modal-title').textContent = 'Editar Categoria';
-            document.getElementById('btn-save-category').textContent = 'Atualizar Categoria';
-
+            document.getElementById('add-modal-title').textContent = 'Editar Rotina';
             renderAddCatForm();
-            addModal.classList.remove('hidden'); addModal.classList.add('flex');
+            document.getElementById('add-category-modal').classList.remove('hidden'); document.getElementById('add-category-modal').classList.add('flex');
         };
 
         document.getElementById('btn-open-add-modal').addEventListener('click', () => {
             state.editingCategoryId = null;
-            document.getElementById('new-cat-name').value = '';
-            document.getElementById('new-cat-unit').value = '';
             state.newCatIcon = 'activity';
             state.newCatColor = 'bg-blue-500';
+            state.newCatDays = [1,2,3,4,5]; // Seg-Sex por defeito
+            state.newCatReminder = false;
+            document.getElementById('new-cat-name').value = '';
+            document.getElementById('new-cat-unit').value = '';
+            document.getElementById('new-cat-time').value = '';
             
-            document.getElementById('add-modal-title').textContent = 'Nova Categoria';
-            document.getElementById('btn-save-category').textContent = 'Guardar Categoria';
-
+            document.getElementById('add-modal-title').textContent = 'Nova Rotina';
             renderAddCatForm();
-            addModal.classList.remove('hidden'); addModal.classList.add('flex');
+            document.getElementById('add-category-modal').classList.remove('hidden'); document.getElementById('add-category-modal').classList.add('flex');
         });
 
         document.getElementById('btn-close-add-modal').addEventListener('click', () => {
-            addModal.classList.add('hidden'); addModal.classList.remove('flex');
+            document.getElementById('add-category-modal').classList.add('hidden'); document.getElementById('add-category-modal').classList.remove('flex');
         });
 
         document.getElementById('btn-save-category').addEventListener('click', () => {
             const name = document.getElementById('new-cat-name').value.trim();
-            const unit = document.getElementById('new-cat-unit').value; // dropdown, sem trim
+            const unit = document.getElementById('new-cat-unit').value;
+            const time = document.getElementById('new-cat-time').value;
             
-            if (!name) { showCustomDialog("Aviso", "Por favor, digite um nome para a categoria.", "alert"); return; }
+            if (!name) { showCustomDialog("Aviso", "Por favor, digite um nome.", "alert"); return; }
             
+            if (state.newCatReminder && !time) {
+                showCustomDialog("Aviso", "Para usar o lembrete, precisa definir um horário.", "alert"); return;
+            }
+
             if (state.editingCategoryId) {
                 const index = state.categories.findIndex(c => c.id === state.editingCategoryId);
                 if (index !== -1) {
-                    state.categories[index].label = name;
-                    state.categories[index].icon = state.newCatIcon;
-                    state.categories[index].color = state.newCatColor;
-                    state.categories[index].unit = unit;
+                    state.categories[index] = {
+                        ...state.categories[index],
+                        label: name, icon: state.newCatIcon, color: state.newCatColor, unit: unit, time: time, days: [...state.newCatDays], reminder: state.newCatReminder
+                    };
                 }
             } else {
-                state.categories.push({ id: 'cat_' + Date.now(), label: name, icon: state.newCatIcon, color: state.newCatColor, unit: unit });
+                state.categories.push({ 
+                    id: 'cat_' + Date.now(), label: name, icon: state.newCatIcon, color: state.newCatColor, unit: unit, time: time, days: [...state.newCatDays], reminder: state.newCatReminder 
+                });
             }
 
             saveData(); updateAllUI();
-            addModal.classList.add('hidden'); addModal.classList.remove('flex');
+            document.getElementById('add-category-modal').classList.add('hidden'); document.getElementById('add-category-modal').classList.remove('flex');
         });
 
-        // ==========================================
-        // LÓGICA DO MODAL DE FILTRO
-        // ==========================================
+        // FILTRO E NAVEGAÇÃO
         const renderFilterModal = () => {
             const container = document.getElementById('filter-options');
-            container.innerHTML = '';
-
-            const btnAll = document.createElement('button');
-            btnAll.className = `flex items-center gap-3 p-4 rounded-xl border transition-all active:scale-95 touch-manipulation ${state.activeFilter === null ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-bold' : 'border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`;
-            btnAll.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center shrink-0">
-                    <i data-lucide="layers" class="w-4 h-4 text-gray-600 dark:text-gray-300"></i>
-                </div>
-                <span>Todas as Categorias</span>
-                ${state.activeFilter === null ? '<i data-lucide="check" class="ml-auto w-5 h-5 text-green-500"></i>' : ''}
-            `;
-            btnAll.addEventListener('click', () => {
-                state.activeFilter = null;
-                document.getElementById('filter-modal').classList.add('hidden'); document.getElementById('filter-modal').classList.remove('flex');
-                updateAllUI();
-            });
-            container.appendChild(btnAll);
-
+            container.innerHTML = `<button class="flex items-center gap-3 p-4 rounded-xl border transition-all ${state.activeFilter === null ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700' : 'border-gray-100 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'}" onclick="state.activeFilter=null; updateAllUI(); document.getElementById('filter-modal').classList.add('hidden');"><span>Todas as Rotinas</span></button>`;
             state.categories.forEach(cat => {
                 const isSelected = state.activeFilter === cat.id;
-                const btn = document.createElement('button');
-                btn.className = `flex items-center gap-3 p-4 rounded-xl border transition-all active:scale-95 touch-manipulation ${isSelected ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-bold' : 'border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`;
-                btn.innerHTML = `
-                    <div class="${cat.color} text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0">
-                        <i data-lucide="${cat.icon}" class="w-4 h-4"></i>
-                    </div>
-                    <span>${cat.label}</span>
-                    ${isSelected ? '<i data-lucide="check" class="ml-auto w-5 h-5 text-green-500"></i>' : ''}
-                `;
-                btn.addEventListener('click', () => {
-                    state.activeFilter = cat.id;
-                    document.getElementById('filter-modal').classList.add('hidden'); document.getElementById('filter-modal').classList.remove('flex');
-                    updateAllUI();
-                });
-                container.appendChild(btn);
+                container.innerHTML += `<button class="flex items-center gap-3 p-4 rounded-xl border transition-all ${isSelected ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700' : 'border-gray-100 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'}" onclick="state.activeFilter='${cat.id}'; updateAllUI(); document.getElementById('filter-modal').classList.add('hidden');"><div class="${cat.color} text-white w-8 h-8 rounded-full flex items-center justify-center"><i data-lucide="${cat.icon}" class="w-4 h-4"></i></div><span>${cat.label}</span></button>`;
             });
             lucide.createIcons();
         };
 
-        document.getElementById('btn-open-filter').addEventListener('click', () => {
-            renderFilterModal();
-            const modal = document.getElementById('filter-modal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-        });
-
-        document.getElementById('btn-close-filter').addEventListener('click', () => {
-            const modal = document.getElementById('filter-modal');
-            modal.classList.add('hidden'); modal.classList.remove('flex');
-        });
-
-        // ==========================================
-        // NAVEGAÇÃO E EVENTOS GERAIS
-        // ==========================================
-        const navBtns = { home: document.getElementById('nav-home'), calendar: document.getElementById('nav-calendar'), settings: document.getElementById('nav-settings') };
-        const tabs = { home: document.getElementById('tab-home'), calendar: document.getElementById('tab-calendar'), settings: document.getElementById('tab-settings') };
+        document.getElementById('btn-open-filter').addEventListener('click', () => { renderFilterModal(); document.getElementById('filter-modal').classList.remove('hidden'); document.getElementById('filter-modal').classList.add('flex'); });
+        document.getElementById('btn-close-filter').addEventListener('click', () => { document.getElementById('filter-modal').classList.add('hidden'); document.getElementById('filter-modal').classList.remove('flex'); });
 
         const switchTab = (tabId) => {
             state.activeTab = tabId;
-            Object.keys(tabs).forEach(key => {
-                tabs[key].classList.add('hidden'); tabs[key].classList.remove('flex');
-                const btn = navBtns[key];
-                btn.classList.replace('text-green-600', 'text-gray-400');
-                btn.classList.replace('dark:text-green-500', 'dark:text-gray-500');
-                const icon = btn.querySelector('svg') || btn.querySelector('i');
-                if(icon) { icon.classList.remove('stroke-[2.5px]'); icon.classList.add('stroke-2'); }
-                btn.querySelector('div').classList.remove('scale-110');
+            ['home', 'calendar', 'settings'].forEach(key => {
+                document.getElementById(`tab-${key}`).classList.replace('flex', 'hidden');
+                document.getElementById(`nav-${key}`).classList.replace('text-green-600', 'text-gray-400');
+                document.getElementById(`nav-${key}`).classList.replace('dark:text-green-500', 'dark:text-gray-500');
+                document.getElementById(`nav-${key}`).querySelector('div').classList.remove('scale-110');
             });
-
-            tabs[tabId].classList.remove('hidden'); tabs[tabId].classList.add('flex');
-            const activeBtn = navBtns[tabId];
-            activeBtn.classList.replace('text-gray-400', 'text-green-600');
-            activeBtn.classList.replace('dark:text-gray-500', 'dark:text-green-500');
-            const activeIcon = activeBtn.querySelector('svg') || activeBtn.querySelector('i');
-            if(activeIcon) { activeIcon.classList.remove('stroke-2'); activeIcon.classList.add('stroke-[2.5px]'); }
-            activeBtn.querySelector('div').classList.add('scale-110');
+            document.getElementById(`tab-${tabId}`).classList.replace('hidden', 'flex');
+            document.getElementById(`nav-${tabId}`).classList.replace('text-gray-400', 'text-green-600');
+            document.getElementById(`nav-${tabId}`).classList.replace('dark:text-gray-500', 'dark:text-green-500');
+            document.getElementById(`nav-${tabId}`).querySelector('div').classList.add('scale-110');
         };
 
-        navBtns.home.addEventListener('click', () => switchTab('home'));
-        navBtns.calendar.addEventListener('click', () => switchTab('calendar'));
-        navBtns.settings.addEventListener('click', () => switchTab('settings'));
+        document.getElementById('nav-home').addEventListener('click', () => switchTab('home'));
+        document.getElementById('nav-calendar').addEventListener('click', () => switchTab('calendar'));
+        document.getElementById('nav-settings').addEventListener('click', () => switchTab('settings'));
 
         document.getElementById('btn-prev-month').addEventListener('click', () => { state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() - 1, 1); renderCalendar(); });
         document.getElementById('btn-next-month').addEventListener('click', () => { state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + 1, 1); renderCalendar(); });
         document.getElementById('btn-go-today').addEventListener('click', () => { state.currentDate = new Date(); renderCalendar(); });
-        document.getElementById('btn-close-modal').addEventListener('click', () => { state.selectedEditDate = null; renderModal(); });
 
         loadData();
-
     </script>
 </body>
 </html>
